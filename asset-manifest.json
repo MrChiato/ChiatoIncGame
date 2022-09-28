@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/ChiatoIncGame/static/js/main.ce57caef.js",
+    "main.js": "/ChiatoIncGame/static/js/main.53059aa1.js",
     "static/js/787.6da7ee46.chunk.js": "/ChiatoIncGame/static/js/787.6da7ee46.chunk.js",
     "index.html": "/ChiatoIncGame/index.html",
-    "main.ce57caef.js.map": "/ChiatoIncGame/static/js/main.ce57caef.js.map",
+    "main.53059aa1.js.map": "/ChiatoIncGame/static/js/main.53059aa1.js.map",
     "787.6da7ee46.chunk.js.map": "/ChiatoIncGame/static/js/787.6da7ee46.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.ce57caef.js"
+    "static/js/main.53059aa1.js"
   ]
 }
