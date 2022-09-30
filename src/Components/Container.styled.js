@@ -11,6 +11,15 @@ export const BuildPanelContainer = styled.div`
     align-items: center;
     flex: 1;
 `
+
+export const SavePanelContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    justify-content: flex-end;
+    flex: 1;
+`
+
 export const TerritoryPanelContainer = styled.div`
     display: flex;
     flex-direction: column;
