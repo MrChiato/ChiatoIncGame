@@ -1,25 +1,38 @@
-import { startGame,territoryClick,loadGameClick,deleteSaveClick,saveGameClick } from "./GameFunctions";
-import { Container, BuildPanelContainer, TerritoryPanelContainer, BuildingUpgradeContainer,SavePanelContainer } from "./Components/Container.styled";
+import { startGame,territoryClick,deleteSaveClick, attackClick, totalMoney, territoryIncome, armyRequirement } from "./GameFunctions";
+import { Container, BuildPanelContainer, TerritoryPanelContainer, BuildingUpgradeContainer,SavePanelContainer,TopContainer } from "./Components/Container.styled";
 import Building from "./Components/Building";
 import Upgrade from "./Components/Upgrades";
-import { StatsText,StatsInfoText,DescText } from "./Components/StyledText.styled"
+import { StatsText,StatsInfoText,DescText,THText,InfoTable } from "./Components/StyledText.styled"
 import  { Button } from "./Components/Button.styled";
+import {Input} from "./Components/Forms.styled";
 
 const startUnitPrice = 10000;
 const startUpgradePrice = 100000;
 const startUnitValue = 1;
-const versionNumber = "0.0.1"
+const versionNumber = "0.0.2"
+
+const startingArmyWin = 500000;
+export const startingEnemyArmy = 20000;
+const startingArmyRequirement = armyRequirement
 
 function App(){
   startGame();
   return (
+    <TopContainer>
+      <InfoTable>
+        <thead>
+          <tr>
+            <THText id="moneyText">Cash: {totalMoney.toLocaleString()}</THText>
+            <THText id="incomeText">+ ${territoryIncome}</THText>
+            <THText id="soldiersText">Army strength: 0</THText>
+            <THText id="soldiersPerUpdateText">+ 0</THText>
+          </tr>
+        </thead>
+      </InfoTable>
     <Container>
       <BuildPanelContainer>
         <h2>Army</h2>
         <DescText>Construct buildings to strengthen your army</DescText>
-        <StatsText id="moneyText">Cash: $250,000</StatsText>
-        <StatsText id="soldiersText">Army strength: 0</StatsText>
-        <StatsInfoText id="soldiersPerUpdateText">Army per cycle: 0</StatsInfoText>
         <BuildingUpgradeContainer>
           <Building name="Barrack" amount={1} price={startUnitPrice} value={startUnitValue} type="Army" unit="soldier" ></Building>
           <Upgrade name="Barrack" price={startUpgradePrice}></Upgrade>
@@ -74,25 +87,45 @@ function App(){
         <h2>Territory</h2>
         <DescText>Use your army to take over new Territory, this will cost army strength but more territory generates more income.<br/>Owning more territory will also cause soldiers to die by protecting it, causing loses over time</DescText>
         <StatsText id="territoryText">Territory: 1</StatsText>
-        <StatsText id="incomeText">Income: $250</StatsText>
         <StatsText id="losesText">Loses per cycle: 0</StatsText>
         <StatsInfoText id="attackCostText">Attacking now will require 1,000 army forces and take 1 army to defend and generate $1,000 income</StatsInfoText>
         <Button onClick={() => territoryClick()}>Take over new Territory</Button>
+        <StatsText id="warsWonText">Wars won: 0</StatsText>
+        <StatsText id="armyWonText">Cash made: $0</StatsText>
+        <StatsText id="armyLostText">Army lost: 0</StatsText>
+        <DescText>Use your army to attack other nations, you risk losing the army you send.</DescText>
+        <StatsInfoText id="armyCostText">Attacking now will require atleast {startingArmyRequirement.toLocaleString()} army forces and win up to ${startingArmyWin.toLocaleString()}. This enemy force has an Army strength of {startingEnemyArmy.toLocaleString()}</StatsInfoText>
+        <Input id="armyToSendInput" type="number" placeholder="Army to send.."></Input>
+        <StatsInfoText id="warResult"></StatsInfoText>
+        <Button onClick={() => attackClick()}>Attack nation</Button>
         <span>Changelog: version: {versionNumber}</span>
         <ul>Changes:
-          <li>Updated income calculations (nerf)</li>
-          <li>Nerfed upgrades to now only double starting production, not double every production </li>
-          <li>Autoloads your progres when refreshing now</li>
-          <li>Also loads upgrades text now on load</li>
-          <li>Fixed wrong next income calculation</li>
-          <li>When entering an amount and clicking buy, the button calculates next price for same amount, instead of price of 1</li>
-          <li>Fixed a few bugs</li>
+          <li>Added a new way to use army forces</li>
+        </ul>
+        <ul>WIP:
+          <li>Offline Income</li>
+          <li>Building price should increase exponentially</li>
+          <li>Army income should be able to go minus (It can sometimes with a bug atm)</li>
+            <ul>
+              <li>If you lose too much army you lose territory and then buildings</li>
+              <li>When it goes minus you lose army until you get positive income or lose the game</li>
+            </ul>
+          <li>Still need a lot of balance changes</li>
+          <li>More territory features</li>
+          <li>Prestige feature to start on a new planet, reset game or just have a 2nd "tab"</li>
+          <li>UI work</li>
+            <ul>
+              <li>Update UI</li>
+              <li>UI Clarity</li>
+              <li>Animations and pictures</li>
+            </ul>
         </ul>
         <SavePanelContainer>
         <Button onClick={() => deleteSaveClick()}>Reset Game</Button>
         </SavePanelContainer>
       </TerritoryPanelContainer>
     </Container>
+    </TopContainer>
   )
 }
 export default App;

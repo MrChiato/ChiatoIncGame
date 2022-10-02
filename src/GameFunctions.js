@@ -1,3 +1,5 @@
+import { FightArmy, UpdateWarText } from "./WarFunctions";
+
 const timeBetweenUpdates = 1000;
 const timeBetweenSaves = 500;
 const loadtime = 50;
@@ -9,14 +11,21 @@ let attackCostIncrease = 1000;
 const incomeIncrease = 5;
 const startIncome = 990;
 let armyLossIncrease = 2;
-let territoryIncome = 250;
+export let territoryIncome = 250;
 let territoryLoses = 0;
 
-let totalMoney = 250000;
-
+export let totalMoney = 2500000;
 let totalArmy = 0;
+
 let armyPerUpdate = 0;
 let curArmyPerUpdate = 0;
+
+let totalWarsWon = 0;
+let totalArmyWon = 0;
+let totalArmyLost = 0;
+export let armyRequirement = 10000;
+export const winMultiplier = 1000;
+
 
 export let armyBuildings = {
 }
@@ -61,6 +70,32 @@ export function deleteSaveClick(){
 export function saveGameClick(){
     saveToStorage();
 }
+
+export function attackClick(){
+    let warOutcome = FightArmy(totalArmy, totalWarsWon, armyRequirement, territoryIncome);
+    if (warOutcome == false)
+        return
+    if (warOutcome.win == true){
+        totalArmy -= warOutcome.armyLost;
+        totalMoney += warOutcome.prize;
+        totalWarsWon += 1;
+        totalArmyWon += warOutcome.prize;
+        totalArmyLost += warOutcome.armyLost;
+        CalculateNextWar();
+    }
+    else{
+        totalArmy -= warOutcome.armyLost;
+        totalArmyLost += warOutcome.armyLost;
+    }
+    UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost)
+}
+
+function CalculateNextWar(){
+    let nextWarWin = territoryIncome*winMultiplier
+    let nextWarEnemyForce = (totalWarsWon+1) * territoryIncome * 80
+    let nextArmyRequriment = nextWarEnemyForce/2
+    document.getElementById("armyCostText").textContent = ("Attacking now will require atleast "+nextArmyRequriment.toLocaleString()+" army forces and win up to $"+nextWarWin.toLocaleString()+". This enemy force has an Army strength of "+nextWarEnemyForce.toLocaleString())
+   }
 
 export function buttonClick(price, value, amount, name, type){
     let calcPrice = getUnitPrice(name, amount, price)
@@ -217,6 +252,7 @@ function takeOverTerritory(){
     let nextIncome = startIncome+(incomeIncrease)*(nextLoses*(totalTerritory+1))
 
     updateText();
+    CalculateNextWar();
     updateTerritoryText(attackCost, nextLoses, nextIncome);
 }
 
@@ -292,12 +328,12 @@ function updateText(){
     document.getElementById("soldiersText").textContent = ("Army strength: "+ totalArmy.toLocaleString());
     document.getElementById("moneyText").textContent = ("Cash: $"+ totalMoney.toLocaleString());
     armyPerUpdate = calculateIncome() - territoryLoses;
-    document.getElementById("soldiersPerUpdateText").textContent = ("Army per cycle: "+armyPerUpdate.toLocaleString());
+    document.getElementById("soldiersPerUpdateText").textContent = ("+ "+armyPerUpdate.toLocaleString());
 }
 
 function updateTerritoryText(attackCost, losesCost, nextIncome){
     document.getElementById("territoryText").textContent = ("Territory: "+ totalTerritory.toLocaleString());
-    document.getElementById("incomeText").textContent = ("Income: $"+ territoryIncome.toLocaleString());
+    document.getElementById("incomeText").textContent = ("+ $"+ territoryIncome.toLocaleString());
     document.getElementById("losesText").textContent = ("Loses per cycle: "+ territoryLoses.toLocaleString());
     document.getElementById("attackCostText").textContent = ("Attacking now will require "+attackCost.toLocaleString()+" army forces and take "+losesCost.toLocaleString()+" army to defend and generate $"+nextIncome.toLocaleString()+" income");
 }

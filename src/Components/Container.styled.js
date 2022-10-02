@@ -1,5 +1,10 @@
 import styled from "styled-components";
 
+export const TopContainer = styled.div`
+    display:flex;
+    flex-direction: column;
+`
+
 export const Container = styled.div`
     display: flex;
     background: white;
@@ -60,3 +65,4 @@ export const BuildingUpgradeContainer = styled.div`
     width: 100%;
     background: white;
 `
+

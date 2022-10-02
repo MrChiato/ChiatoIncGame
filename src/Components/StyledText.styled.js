@@ -40,3 +40,20 @@ export const DescText = styled.p`
     text-align: center;
     width: 50%;
 `
+export const THText = styled.th`
+    font-size: 25px;
+    padding: 5px 15px;
+`
+
+export const InfoTable = styled.table`
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    border: 2px solid black;
+    margin 0px;
+    position: sticky;
+    top: 0;
+    background: white;
+`
