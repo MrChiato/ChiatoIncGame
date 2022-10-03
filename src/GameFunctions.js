@@ -74,7 +74,6 @@ export function saveGameClick(){
 }
 
 export function attackClick(){
-    OfflineIncome()
     let warOutcome = FightArmy(totalArmy, totalWarsWon, territoryIncome);
     if (warOutcome == false)
         return
