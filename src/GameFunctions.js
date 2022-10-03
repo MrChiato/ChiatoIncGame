@@ -1,3 +1,4 @@
+import { startingArmyWin, startingEnemyArmy } from "./App";
 import { FightArmy, UpdateWarText } from "./WarFunctions";
 
 const timeBetweenUpdates = 1000;
@@ -14,7 +15,7 @@ let armyLossIncrease = 2;
 export let territoryIncome = 250;
 let territoryLoses = 0;
 
-export let totalMoney = 2500000;
+export let totalMoney = 250000;
 let totalArmy = 0;
 
 let armyPerUpdate = 0;
@@ -23,8 +24,9 @@ let curArmyPerUpdate = 0;
 let totalWarsWon = 0;
 let totalArmyWon = 0;
 let totalArmyLost = 0;
-export let armyRequirement = 10000;
-export const winMultiplier = 1000;
+export const armyRequirement = 10000;
+export const winMultiplier = 2;
+export const armyGrowth = 2500;
 
 
 export let armyBuildings = {
@@ -72,7 +74,8 @@ export function saveGameClick(){
 }
 
 export function attackClick(){
-    let warOutcome = FightArmy(totalArmy, totalWarsWon, armyRequirement, territoryIncome);
+    OfflineIncome()
+    let warOutcome = FightArmy(totalArmy, totalWarsWon, territoryIncome);
     if (warOutcome == false)
         return
     if (warOutcome.win == true){
@@ -87,12 +90,25 @@ export function attackClick(){
         totalArmy -= warOutcome.armyLost;
         totalArmyLost += warOutcome.armyLost;
     }
+    updateText();
     UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost)
 }
 
 function CalculateNextWar(){
-    let nextWarWin = territoryIncome*winMultiplier
-    let nextWarEnemyForce = (totalWarsWon+1) * territoryIncome * 80
+    let nextWarEnemyForce = ((totalWarsWon+1)**2) *  armyGrowth * (totalWarsWon+1)
+    let nextWarWin = nextWarEnemyForce*winMultiplier*totalWarsWon
+    if (totalWarsWon == 0){
+        nextWarWin = startingArmyWin
+        nextWarEnemyForce = startingEnemyArmy
+    }
+    if (totalWarsWon == 1){
+        nextWarWin = startingArmyWin*2
+        nextWarEnemyForce = startingEnemyArmy*2
+    }
+    if (totalWarsWon == 2){
+        nextWarWin = startingArmyWin*3
+        nextWarEnemyForce = startingEnemyArmy*3
+    }
     let nextArmyRequriment = nextWarEnemyForce/2
     document.getElementById("armyCostText").textContent = ("Attacking now will require atleast "+nextArmyRequriment.toLocaleString()+" army forces and win up to $"+nextWarWin.toLocaleString()+". This enemy force has an Army strength of "+nextWarEnemyForce.toLocaleString())
    }
@@ -252,11 +268,11 @@ function takeOverTerritory(){
     let nextIncome = startIncome+(incomeIncrease)*(nextLoses*(totalTerritory+1))
 
     updateText();
-    CalculateNextWar();
     updateTerritoryText(attackCost, nextLoses, nextIncome);
 }
 
 function saveToStorage(){
+    const saveTime = GetNowInSeconds();
     let data = {
         money: totalMoney,
         army: totalArmy,
@@ -267,7 +283,11 @@ function saveToStorage(){
         income: territoryIncome,
         loses: territoryLoses,
         prices: armyPrices,
-        upgPrices: upgradePrices
+        upgPrices: upgradePrices,
+        warWins: totalWarsWon,
+        warCash: totalArmyWon,
+        warLost: totalArmyLost,
+        saveTime: saveTime
     }
     window.localStorage.setItem("Save", JSON.stringify(data))
 }
@@ -284,6 +304,10 @@ function loadFromStorage(){
     territoryLoses = loadedData["loses"]
     armyPrices = loadedData["prices"]
     upgradePrices = loadedData["upgPrices"]
+    totalWarsWon = loadedData["warWins"]
+    totalArmyWon = loadedData["warCash"]
+    totalArmyLost = loadedData["warLost"]
+    let loadSaveTime = loadedData["saveTime"]
 
 
     let attackCost = (totalTerritory**2)*attackCostIncrease;
@@ -302,8 +326,12 @@ function loadFromStorage(){
         document.getElementById(upgrade+"UpgradeButton").textContent = ("Upgrade for $"+upgradePrices[upgrade].toLocaleString())
     }
     armyPerUpdate = calculateIncome() - territoryLoses;
-    updateText()
+    OfflineIncome(loadSaveTime)
+    updateText();
+    UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost);
+    CalculateNextWar();
     updateTerritoryText(attackCost, losesCost, nextIncome);
+    
 }
 
 export function getUnitPrice(name, amount, price){
@@ -336,4 +364,38 @@ function updateTerritoryText(attackCost, losesCost, nextIncome){
     document.getElementById("incomeText").textContent = ("+ $"+ territoryIncome.toLocaleString());
     document.getElementById("losesText").textContent = ("Loses per cycle: "+ territoryLoses.toLocaleString());
     document.getElementById("attackCostText").textContent = ("Attacking now will require "+attackCost.toLocaleString()+" army forces and take "+losesCost.toLocaleString()+" army to defend and generate $"+nextIncome.toLocaleString()+" income");
+}
+
+function GetNowInSeconds(){
+    const timeNow = new Date()
+    const timeNowInSec = Math.round(timeNow.getTime() / 1000)
+    return timeNowInSec
+}
+
+function OfflineIncome(savedTime){
+
+    const loadTime = new Date()
+    const loadTimeInSec = Math.round(loadTime.getTime() / 1000)
+
+    const secsOffline = loadTimeInSec - savedTime
+
+    if (secsOffline < 30000)
+        return
+    
+    let curArmyPerUpdate = calculateIncome() - territoryLoses;
+    let offlineArmy = curArmyPerUpdate*(secsOffline)
+    let offlineCash = territoryIncome*(secsOffline)
+    totalArmy += offlineArmy;
+    totalMoney += offlineCash;
+
+    document.getElementById("offlineIncomeText").textContent = ("While offline you made $"+offlineCash.toLocaleString());
+    document.getElementById("offlineArmyText").textContent = ("While offline your army increased by "+offlineArmy.toLocaleString());
+
+    setTimeout(RemoveOfflineText, 30000);
+}
+
+function RemoveOfflineText(){
+    
+    document.getElementById("offlineIncomeText").textContent = ("");
+    document.getElementById("offlineArmyText").textContent = ("");
 }

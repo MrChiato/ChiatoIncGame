@@ -11,7 +11,7 @@ const startUpgradePrice = 100000;
 const startUnitValue = 1;
 const versionNumber = "0.0.2"
 
-const startingArmyWin = 500000;
+export const startingArmyWin = 200000;
 export const startingEnemyArmy = 20000;
 const startingArmyRequirement = armyRequirement
 
@@ -20,6 +20,7 @@ function App(){
   return (
     <TopContainer>
       <InfoTable>
+        <thead id="offlineIncomeText"></thead>
         <thead>
           <tr>
             <THText id="moneyText">Cash: {totalMoney.toLocaleString()}</THText>
@@ -28,6 +29,7 @@ function App(){
             <THText id="soldiersPerUpdateText">+ 0</THText>
           </tr>
         </thead>
+        <thead id="offlineArmyText"></thead>
       </InfoTable>
     <Container>
       <BuildPanelContainer>
@@ -96,14 +98,14 @@ function App(){
         <DescText>Use your army to attack other nations, you risk losing the army you send.</DescText>
         <StatsInfoText id="armyCostText">Attacking now will require atleast {startingArmyRequirement.toLocaleString()} army forces and win up to ${startingArmyWin.toLocaleString()}. This enemy force has an Army strength of {startingEnemyArmy.toLocaleString()}</StatsInfoText>
         <Input id="armyToSendInput" type="number" placeholder="Army to send.."></Input>
-        <StatsInfoText id="warResult"></StatsInfoText>
+        <DescText id="warResult"></DescText>
         <Button onClick={() => attackClick()}>Attack nation</Button>
         <span>Changelog: version: {versionNumber}</span>
         <ul>Changes:
           <li>Added a new way to use army forces</li>
+          <li>Added Offline Income</li>
         </ul>
         <ul>WIP:
-          <li>Offline Income</li>
           <li>Building price should increase exponentially</li>
           <li>Army income should be able to go minus (It can sometimes with a bug atm)</li>
             <ul>
