@@ -122,6 +122,10 @@ function App(){
               <li>Animations and pictures</li>
             </ul>
         </ul>
+        <DescText>Join the discord server to discuss the game, give feedback or report bugs :)</DescText>
+        <a href="https://discord.gg/6wvUZcsnyt" target="_blank" title="Join the discord server!">
+          <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/625e5fcef7ab80b8c1fe559e_Discord-Logo-Color.png"></img>
+        </a>
         <SavePanelContainer>
         <Button onClick={() => deleteSaveClick()}>Reset Game</Button>
         </SavePanelContainer>

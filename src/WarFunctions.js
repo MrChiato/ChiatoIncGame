@@ -11,7 +11,7 @@ export function FightArmy(curTotalArmy, curTotalWarsWon){
     
     if (!userInput){
         document.getElementById("warResult").style.color = "red";
-        document.getElementById("warResult").textContent = ("You must send more army!");
+        document.getElementById("warResult").textContent = ("Please input a valid positive number!");
         return falseInput
     }
     if (armyRequirement > userArmyInput){
@@ -21,7 +21,7 @@ export function FightArmy(curTotalArmy, curTotalWarsWon){
     }
     if (userArmyInput > curTotalArmy){
         document.getElementById("warResult").style.color = "red";
-        document.getElementById("warResult").textContent = ("You must send more army!");
+        document.getElementById("warResult").textContent = ("You don't have enough army!");
         return falseInput
     }
 

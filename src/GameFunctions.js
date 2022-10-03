@@ -378,7 +378,7 @@ function OfflineIncome(savedTime){
 
     const secsOffline = loadTimeInSec - savedTime
 
-    if (secsOffline < 30000)
+    if (secsOffline < 5000)
         return
     
     let curArmyPerUpdate = calculateIncome() - territoryLoses;
@@ -387,6 +387,9 @@ function OfflineIncome(savedTime){
     totalArmy += offlineArmy;
     totalMoney += offlineCash;
 
+    if (secsOffline < 30000)
+        return
+       
     document.getElementById("offlineIncomeText").textContent = ("While offline you made $"+offlineCash.toLocaleString());
     document.getElementById("offlineArmyText").textContent = ("While offline your army increased by "+offlineArmy.toLocaleString());
 
