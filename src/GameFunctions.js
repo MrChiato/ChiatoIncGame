@@ -1,4 +1,6 @@
-import { startingArmyWin, startingEnemyArmy } from "./App";
+import { armyPrices, startingArmyWin, startingEnemyArmy } from "./App";
+import { ButtonAffordableVisibility, HandleVisibility, LoadVisibleBUContainers, ShowNextBuildingContainer, ShowNextUpgradeContainer } from "./BuildingVisibilityHandling";
+import { LoadSettings, ToggleDarkMode, UpdateDetailedText } from "./SettingsHandling";
 import { FightArmy, UpdateWarText } from "./WarFunctions";
 
 const timeBetweenUpdates = 1000;
@@ -35,14 +37,14 @@ export let armyBuildings = {
 export let armyUpgrades = {
 }
 
-let armyValue = {
+export let armyValue = {
 }
 
-let armyPrices = {
+export let saveUpgradePrices = {
+
 }
 
-let upgradePrices = {
-}
+
 
 export function startGame(){
     if (gameIsStarted === false){ 
@@ -123,6 +125,7 @@ export function buttonClick(price, value, amount, name, type){
             armyBuildings[name] += amount;
         else{
             armyBuildings[name] = amount;
+            ShowNextUpgradeContainer(Object.keys(armyBuildings).length-1)
         }
         armyValue[name] = value;
         armyPerUpdate = calculateIncome() - territoryLoses;
@@ -139,11 +142,14 @@ export function buttonClick(price, value, amount, name, type){
         document.getElementById(name+"button").textContent = ("Build "+amount+" for $"+(getUnitPrice(name, amount, price)).toLocaleString());
     else
         document.getElementById(name+"button").textContent = ("Build 1 for $"+(getUnitPrice(name, 1, price)).toLocaleString());
+    ButtonAffordableVisibility()
     updateText();
+    UpdateDetailedText()
 }
 
 function update(){
     addIncome();
+    HandleVisibility()
     if (totalArmy < 0){
         totalTerritory -= 1;
         territoryIncome -= (totalTerritory*attackCostIncrease)*totalTerritory
@@ -189,14 +195,14 @@ export function upgradeButtonClicked(name, price){
     let ownedUpgrades = 0;
     let thisUpgradePrice = 0;
     let nextUpgradePrice = 0;
-
     if (!(name in armyBuildings))
        return
 
     if (name in armyUpgrades)
         ownedUpgrades = armyUpgrades[name]
-    else
+    else{
         ownedUpgrades = 0;
+    }
 
     thisUpgradePrice = ((price)*(3**ownedUpgrades))
 
@@ -207,6 +213,7 @@ export function upgradeButtonClicked(name, price){
     if (ownedUpgrades == 0){
         armyUpgrades[name] = 1;
         ownedUpgrades = 1;
+        ShowNextBuildingContainer(Object.keys(armyUpgrades).length)
     }
     else{
         armyUpgrades[name] += 1;
@@ -214,16 +221,16 @@ export function upgradeButtonClicked(name, price){
     }
 
 
-
     armyPerUpdate = calculateIncome() - territoryLoses;
     nextUpgradePrice = ((price)*(3**ownedUpgrades+1));
-    upgradePrices[name] = nextUpgradePrice
+    saveUpgradePrices[name] = nextUpgradePrice
 
     let upgradeAdd = armyValue[name]*ownedUpgrades
 
-
+    UpdateDetailedText();
     updateUnitsOwned(name);
     updateText();
+    ButtonAffordableVisibility()
     
     document.getElementById(name+"UpgradeHeader").textContent = ("Upgrade "+name+"s")
     document.getElementById(name+"UpgradeAmount").textContent = ("You currently own "+ownedUpgrades+" "+name+" upgrades")
@@ -277,12 +284,11 @@ function saveToStorage(){
         army: totalArmy,
         building: armyBuildings,
         upgrades: armyUpgrades,
+        upgPrices: saveUpgradePrices,
         value: armyValue,
         territory: totalTerritory,
         income: territoryIncome,
         loses: territoryLoses,
-        prices: armyPrices,
-        upgPrices: upgradePrices,
         warWins: totalWarsWon,
         warCash: totalArmyWon,
         warLost: totalArmyLost,
@@ -301,11 +307,10 @@ function loadFromStorage(){
     totalTerritory = loadedData["territory"]
     territoryIncome = loadedData["income"]
     territoryLoses = loadedData["loses"]
-    armyPrices = loadedData["prices"]
-    upgradePrices = loadedData["upgPrices"]
     totalWarsWon = loadedData["warWins"]
     totalArmyWon = loadedData["warCash"]
     totalArmyLost = loadedData["warLost"]
+    saveUpgradePrices = loadedData["upgPrices"]
     let loadSaveTime = loadedData["saveTime"]
 
 
@@ -322,14 +327,16 @@ function loadFromStorage(){
         document.getElementById(upgrade+"UpgradeHeader").textContent = ("Upgrade "+upgrade+"s")
         document.getElementById(upgrade+"UpgradeAmount").textContent = ("You currently own "+armyUpgrades[upgrade]+" "+upgrade+" upgrades")
         document.getElementById(upgrade+"UpgradeAdds").textContent = ("Production increased by "+upgradeAdd+" per "+upgrade)
-        document.getElementById(upgrade+"UpgradeButton").textContent = ("Upgrade for $"+upgradePrices[upgrade].toLocaleString())
+        document.getElementById(upgrade+"UpgradeButton").textContent = ("Upgrade for $"+saveUpgradePrices[upgrade].toLocaleString())
     }
     armyPerUpdate = calculateIncome() - territoryLoses;
     OfflineIncome(loadSaveTime)
     updateText();
     UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost);
     CalculateNextWar();
+    LoadSettings();
     updateTerritoryText(attackCost, losesCost, nextIncome);
+    LoadVisibleBUContainers(Object.keys(armyBuildings).length, Object.keys(armyUpgrades).length+1)
     
 }
 
@@ -378,7 +385,7 @@ function OfflineIncome(savedTime){
 
     const secsOffline = loadTimeInSec - savedTime
 
-    if (secsOffline < 5000)
+    if (secsOffline < 2)
         return
     
     let curArmyPerUpdate = calculateIncome() - territoryLoses;
@@ -387,9 +394,10 @@ function OfflineIncome(savedTime){
     totalArmy += offlineArmy;
     totalMoney += offlineCash;
 
-    if (secsOffline < 30000)
+    if (secsOffline < 60)
         return
-       
+
+       console.log("works")
     document.getElementById("offlineIncomeText").textContent = ("While offline you made $"+offlineCash.toLocaleString());
     document.getElementById("offlineArmyText").textContent = ("While offline your army increased by "+offlineArmy.toLocaleString());
 

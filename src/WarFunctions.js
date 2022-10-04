@@ -85,7 +85,7 @@ export function UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost){
 export function WarResultText(win, prize, armyLost){
     if (win == false){
         document.getElementById("warResult").style.color = "red";
-        document.getElementById("warResult").textContent = ("You lost! All of your "+armyLost+" army died");
+        document.getElementById("warResult").textContent = ("You lost! All of your "+armyLost.toLocaleString()+" army died");
     }
     else{
         document.getElementById("warResult").style.color = "green";

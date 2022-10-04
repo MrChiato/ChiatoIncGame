@@ -1,10 +1,11 @@
 import { Component } from "react";
 import  { Button } from "./Button.styled";
 import { buttonClick,getUnitPrice } from "../GameFunctions";
-import { UpgradeText, UpgradeInfoText, UpgradeDescText } from "./StyledText.styled"
+import { UpgradeText, UpgradeInfoText, UpgradeDescText, DescText, DetailText } from "./StyledText.styled"
 import { BuildingContainer } from "./Container.styled"
 import {Input} from "./Forms.styled";
 import {updateUnitsOwned} from "../GameFunctions";
+import { ThisButtonVisibility } from "../BuildingVisibilityHandling";
 
 
 
@@ -28,6 +29,7 @@ class Building extends Component{
         if (userInputAmount > 1 && userInputAmount < 10000){
             userInputValue = getUnitPrice(name, userInputAmount, this.props.price)
             document.getElementById(name+"button").textContent = ("Build "+userInputAmount.toLocaleString()+" for $"+userInputValue.toLocaleString())
+            ThisButtonVisibility(name, userInputAmount)
         }
         else{
             userInputAmount = 1;
@@ -37,10 +39,11 @@ class Building extends Component{
     }
     render(){
         return(
-            <BuildingContainer>  
+            <BuildingContainer className="BuildContainer">  
                 <UpgradeText >Build {this.props.name}</UpgradeText>
                 <UpgradeDescText >{this.props.name}s create {this.props.unit}s for your army</UpgradeDescText>
-                <UpgradeDescText >Each {this.props.unit} increases {this.props.type} strength by {this.props.value.toLocaleString()}</UpgradeDescText>
+                <DetailText id={this.props.name+"detailedStats"}></DetailText>
+                <UpgradeDescText id={this.props.name+"descText"}>Each {this.props.unit} increases {this.props.type} strength by {this.props.value.toLocaleString()}</UpgradeDescText>
                 <UpgradeInfoText id={this.props.name}>You currently own 0 {this.props.name}s</UpgradeInfoText>
                 <UpgradeInfoText id={this.props.name+"perCycle"}>Army increased by 0 per cycle</UpgradeInfoText>
                 <Input id={this.props.name+"input"} type="number" placeholder="Amount..." onChange={() => this.handleInputChange(this.props.name)}></Input>

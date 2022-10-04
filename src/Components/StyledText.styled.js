@@ -40,6 +40,15 @@ export const DescText = styled.p`
     text-align: center;
     width: 50%;
 `
+export const DetailText = styled.p`
+    margin: 0px;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    width: 50%;
+    font-style: italic;
+`
+
 export const THText = styled.th`
     font-size: 25px;
     padding: 5px 15px;
