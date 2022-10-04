@@ -1,8 +1,15 @@
 import { startingArmyWin, startingEnemyArmy } from "./App";
-import { armyGrowth, armyRequirement, winMultiplier } from "./GameFunctions";
+import { armyGrowth, armyRequirement, totalArmy, winMultiplier } from "./GameFunctions";
+import { maxSetting } from "./SettingsHandling";
 
 
-
+export function ArmyInputChange(){
+    let userArmyInput = parseInt(document.getElementById("armyToSendInput").value);
+    if (maxSetting == true && (userArmyInput > totalArmy)){
+        userArmyInput = totalArmy
+        document.getElementById("armyToSendInput").value = userArmyInput
+    }
+}
 
 export function FightArmy(curTotalArmy, curTotalWarsWon){
     let falseInput = false;

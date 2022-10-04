@@ -7,6 +7,7 @@ import  { Button, ChangeTabButton } from "./Components/Button.styled";
 import {Input} from "./Components/Forms.styled";
 import { EnableDetailedStats, ToggleMaxSetting } from "./SettingsHandling";
 import { GlobalStyle } from "./Components/globalstyle.styled";
+import { ArmyInputChange } from "./WarFunctions";
 
 const startUnitPrice = 10000;
 const startUpgradePrice = 100000;
@@ -122,7 +123,7 @@ function App(){
         <StatsText id="armyLostText">Army lost: 0</StatsText>
         <DescText>Use your army to attack other nations, you risk losing the army you send.</DescText>
         <StatsInfoText id="armyCostText">Attacking now will require atleast {startingArmyRequirement.toLocaleString()} army forces and win up to ${startingArmyWin.toLocaleString()}. This enemy force has an Army strength of {startingEnemyArmy.toLocaleString()}</StatsInfoText>
-        <Input id="armyToSendInput" type="number" placeholder="Army to send.."></Input>
+        <Input id="armyToSendInput" type="number" placeholder="Army to send.." onChange={() => ArmyInputChange()}></Input>
         <DescText id="warResult"></DescText>
         <Button onClick={() => attackClick()}>Attack nation</Button>
         </TerritoryPanelInnerContainer>
@@ -135,7 +136,7 @@ function App(){
         </SettingsContainer>
         <SettingsContainer>
         <CheckBoxInput type="checkbox" id="maxAmountSetting" onChange={() => ToggleMaxSetting()}/>
-        <label>Enable max buy amount, if you enter a number above 999 buildings<br/> it will automatically set buy amount to max affordable</label>
+        <label>Enable max input amount, if you enter a number above current army strength for war <br/>or 999 for buildings, it will automatically set buy amount to max affordable</label>
         </SettingsContainer>
         <SavePanelContainer>
           <Button onClick={() => deleteSaveClick()}>Reset Game</Button>
@@ -148,6 +149,7 @@ function App(){
             <li>Added help tab</li>
             <li>Added max input to buildings</li>
             <li>Added error text to territory</li>
+            <li>Max input now applies to sending units to war aswell</li>
           </ul>
           <ul>WIP:
             <li>More territory features and upgrades</li>
