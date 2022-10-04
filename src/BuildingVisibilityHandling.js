@@ -51,9 +51,9 @@ export function ButtonAffordableVisibility(){
     }
         for (let upgrade in upgradePrices){
             if (upgrade in saveUpgradePrices)
-                opacityPercentage = Math.floor(totalMoney/getUnitPrice(upgrade, 1, saveUpgradePrices[upgrade])*100)
+                opacityPercentage = Math.round(totalMoney/saveUpgradePrices[upgrade]*100)
             else
-                opacityPercentage = Math.floor(totalMoney/getUnitPrice(upgrade, 1, upgradePrices[upgrade])*100)
+                opacityPercentage = Math.round(totalMoney/upgradePrices[upgrade]*100)
             if (opacityPercentage < 15)
                 opacityPercentage = 15;
             if (opacityPercentage >= 100){

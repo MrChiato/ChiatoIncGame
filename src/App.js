@@ -139,6 +139,7 @@ function App(){
             <li>Added a new setting, check the settings tab</li>
             <li>Fixed a few bugs with the new ui</li>
             <li>Fixed a bug where upgrade cost wasn't saved correctly</li>
+            <li>Fixed a bug where upgrade cost button wasn't updating correctly</li>
           </ul>
           <ul>WIP:
             <li>More territory features and upgrades</li>
