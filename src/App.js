@@ -3,11 +3,13 @@ import { Container, BuildPanelContainer, TerritoryPanelContainer, BuildingUpgrad
 import Building from "./Components/Building";
 import Upgrade from "./Components/Upgrades";
 import { StatsText,StatsInfoText,DescText,THText,InfoTable, ErrorText, HeaderText, HelpHeaderText, HelpText } from "./Components/StyledText.styled"
-import  { Button, ChangeTabButton } from "./Components/Button.styled";
-import {Input} from "./Components/Forms.styled";
+import  { Button, ChangeTabButton, SettingsButton } from "./Components/Button.styled";
+import {Input, SaveInput} from "./Components/Forms.styled";
 import { EnableDetailedStats, ToggleMaxSetting } from "./SettingsHandling";
 import { GlobalStyle } from "./Components/globalstyle.styled";
 import { ArmyInputChange } from "./WarFunctions";
+import { Stats } from "./Components/Statistics";
+import { LoadStringButton, ShowStringInField } from "./HandleStringSaveLoad";
 
 const startUnitPrice = 10000;
 const startUpgradePrice = 100000;
@@ -112,7 +114,7 @@ function App(){
         <TerritoryPanelInnerContainer>
         <StatsText id="territoryText">Territory: 1</StatsText>
         <StatsText id="losesText">Loses per cycle: 0</StatsText>
-        <DescText>Use your army to take over new Territory, this will cost army strength but more territory generates more income.<br/>Owning more territory will also cause soldiers to die by protecting it, causing loses over time</DescText>
+        <DescText>Use your army to take over new Territory, this will cost army strength but more territory generates more income.<br/>Owning more territory will also cause soldiers to die by protecting it, causing losses over time</DescText>
         <StatsInfoText id="attackCostText">Attacking now will require 1,000 army forces and take 1 army to defend and generate $1,000 income</StatsInfoText>
         <ErrorText id="territoryError"></ErrorText>
         <Button onClick={() => territoryClick()}>Take over new Territory</Button>
@@ -131,13 +133,22 @@ function App(){
       </TabContainer>
       <TabContainer id="Settings" className="TabContainers">
         <SettingsContainer>
-        <CheckBoxInput type="checkbox" id="detailedSettingsBox" onChange={() => EnableDetailedStats()}/>
-        <label>Enable detailed text for buildings and upgrades</label>
+          <CheckBoxInput type="checkbox" id="detailedSettingsBox" onChange={() => EnableDetailedStats()}/>
+          <label>Enable detailed text for buildings and upgrades</label>
         </SettingsContainer>
         <SettingsContainer>
-        <CheckBoxInput type="checkbox" id="maxAmountSetting" onChange={() => ToggleMaxSetting()}/>
-        <label>Enable max input amount, if you enter a number above current army strength for war <br/>or 999 for buildings, it will automatically set buy amount to max affordable</label>
+          <CheckBoxInput type="checkbox" id="maxAmountSetting" onChange={() => ToggleMaxSetting()}/>
+          <label>Enable max input amount, if you enter a number above current army strength for war <br/>or 999 for buildings, it will automatically set buy amount to max affordable</label>
         </SettingsContainer>
+        <SavePanelContainer>
+          <SaveInput id="SaveStringInput" readOnly></SaveInput>
+          <SettingsButton onClick={() => ShowStringInField()}>Generate Save String</SettingsButton>
+        </SavePanelContainer>
+        <SavePanelContainer>
+          <SaveInput id="LoadStringInput"></SaveInput>
+          <ErrorText id="LoadStringBug"/>
+          <SettingsButton onClick={() => LoadStringButton()}>Load from String</SettingsButton>
+        </SavePanelContainer>
         <SavePanelContainer>
           <Button onClick={() => deleteSaveClick()}>Reset Game</Button>
         </SavePanelContainer>
@@ -150,6 +161,8 @@ function App(){
             <li>Added max input to buildings</li>
             <li>Added error text to territory</li>
             <li>Max input now applies to sending units to war aswell</li>
+            <li>Fixed an error when trying to buy something you cant afford, which you don't own atleast one of already</li>
+            <li>Added a new setting, lets you get a string copy of your save to use on other devices, share for bugs or save for later</li>
           </ul>
           <ul>WIP:
             <li>More territory features and upgrades</li>
@@ -167,7 +180,7 @@ function App(){
           </BuildPanelContainer>
       </TabContainer>
       <TabContainer id="Statistics" className="TabContainers">
-
+        <Stats/>
       </TabContainer>
       <TabContainer id="Help" className="TabContainers">
         <HelpHeaderText>How to play</HelpHeaderText>

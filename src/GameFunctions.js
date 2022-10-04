@@ -1,6 +1,6 @@
 import { armyPrices, startingArmyWin, startingEnemyArmy } from "./App";
 import { ButtonAffordableVisibility, HandleVisibility, LoadVisibleBUContainers, ShowNextBuildingContainer, ShowNextUpgradeContainer } from "./BuildingVisibilityHandling";
-import { LoadSettings, ToggleDarkMode, UpdateDetailedText } from "./SettingsHandling";
+import { LoadSettings, UpdateDetailedText } from "./SettingsHandling";
 import { TabClick } from "./TabHandling";
 import { FightArmy, UpdateWarText } from "./WarFunctions";
 
@@ -31,6 +31,7 @@ export const armyRequirement = 10000;
 export const winMultiplier = 2;
 export const armyGrowth = 2500;
 
+let updateInterval;
 
 export let armyBuildings = {
 }
@@ -52,7 +53,7 @@ export function startGame(){
         setInterval(update, timeBetweenUpdates);
         loadGameClick()
         setTimeout(() => {
-            setInterval(saveToStorage, timeBetweenSaves);
+            updateInterval = setInterval(saveToStorage, timeBetweenSaves);
         }, loadtime);
         gameIsStarted = true;
     }
@@ -247,6 +248,10 @@ export function updateUnitsOwned(name){
         thisArmyUpgradeValue = (thisArmyBuildings*armyValue[name] )*(thisArmyUpgrades+1);
     else
         thisArmyUpgradeValue = (thisArmyBuildings*armyValue[name]);
+
+    if (!(name in armyBuildings))
+        return   
+
     document.getElementById(name).textContent = ("You currently own "+thisArmyBuildings.toLocaleString()+" "+name+"s");
     document.getElementById(name+"perCycle").textContent = ("Army increased by "+thisArmyUpgradeValue.toLocaleString()+" per cycle");
 }
@@ -306,6 +311,10 @@ function saveToStorage(){
 
 function loadFromStorage(){
     let loadedData = JSON.parse(window.localStorage.getItem("Save"))
+    LoadSavedData(loadedData)
+}
+
+export function LoadSavedData(loadedData){
     totalMoney = loadedData["money"]
     totalArmy = loadedData["army"]
     armyBuildings = loadedData["building"]
@@ -319,7 +328,6 @@ function loadFromStorage(){
     totalArmyLost = loadedData["warLost"]
     saveUpgradePrices = loadedData["upgPrices"]
     let loadSaveTime = loadedData["saveTime"]
-
 
     let attackCost = (totalTerritory**2)*attackCostIncrease;
     let losesCost = (attackCost/1000)**armyLossIncrease
@@ -437,7 +445,6 @@ function OfflineIncome(savedTime){
     if (secsOffline < 60)
         return
 
-       console.log("works")
     document.getElementById("offlineIncomeText").textContent = ("While offline you made $"+offlineCash.toLocaleString());
     document.getElementById("offlineArmyText").textContent = ("While offline your army increased by "+offlineArmy.toLocaleString());
 

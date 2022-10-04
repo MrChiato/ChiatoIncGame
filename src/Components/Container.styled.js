@@ -24,9 +24,7 @@ export const BuildPanelContainer = styled.div`
 export const SavePanelContainer = styled.div`
     display: flex;
     flex-direction: column;
-    align-self: flex-end;
-    justify-content: flex-end;
-    flex: 1;
+    align-items: center;
 `
 
 export const TerritoryPanelContainer = styled.div`
