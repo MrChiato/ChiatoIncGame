@@ -2,7 +2,7 @@ import { startGame,territoryClick,deleteSaveClick, attackClick, totalMoney, terr
 import { Container, BuildPanelContainer, TerritoryPanelContainer, BuildingUpgradeContainer,SavePanelContainer,TopContainer, TabContainer, TabButtons, TerritoryPanelInnerContainer, BUContainer } from "./Components/Container.styled";
 import Building from "./Components/Building";
 import Upgrade from "./Components/Upgrades";
-import { StatsText,StatsInfoText,DescText,THText,InfoTable } from "./Components/StyledText.styled"
+import { StatsText,StatsInfoText,DescText,THText,InfoTable, ErrorText } from "./Components/StyledText.styled"
 import  { Button, ChangeTabButton } from "./Components/Button.styled";
 import {Input} from "./Components/Forms.styled";
 import { EnableDetailedStats } from "./SettingsHandling";
@@ -112,6 +112,7 @@ function App(){
         <StatsText id="losesText">Loses per cycle: 0</StatsText>
         <DescText>Use your army to take over new Territory, this will cost army strength but more territory generates more income.<br/>Owning more territory will also cause soldiers to die by protecting it, causing loses over time</DescText>
         <StatsInfoText id="attackCostText">Attacking now will require 1,000 army forces and take 1 army to defend and generate $1,000 income</StatsInfoText>
+        <ErrorText id="territoryError"></ErrorText>
         <Button onClick={() => territoryClick()}>Take over new Territory</Button>
         </TerritoryPanelInnerContainer>
         <TerritoryPanelInnerContainer>

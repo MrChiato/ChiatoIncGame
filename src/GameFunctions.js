@@ -1,6 +1,7 @@
 import { armyPrices, startingArmyWin, startingEnemyArmy } from "./App";
 import { ButtonAffordableVisibility, HandleVisibility, LoadVisibleBUContainers, ShowNextBuildingContainer, ShowNextUpgradeContainer } from "./BuildingVisibilityHandling";
 import { LoadSettings, ToggleDarkMode, UpdateDetailedText } from "./SettingsHandling";
+import { TabClick } from "./TabHandling";
 import { FightArmy, UpdateWarText } from "./WarFunctions";
 
 const timeBetweenUpdates = 1000;
@@ -256,10 +257,16 @@ export function territoryClick(){
 
 function takeOverTerritory(){
     let attackCost = (totalTerritory**2)*attackCostIncrease;
-    if (attackCost > totalArmy)
+    let errorTextField = document.getElementById("territoryError");
+    errorTextField.textContent = "";
+    if (attackCost > totalArmy){
+        errorTextField.textContent = "You do not have enough army to take over";
         return
-    if (curArmyPerUpdate < ((attackCost/1000)**armyLossIncrease))
+    }
+    if (curArmyPerUpdate < ((attackCost/1000)**armyLossIncrease)){
+        errorTextField.textContent = "You do not have enough army income to hold this territory, construct more buildings";
         return
+    }
     
     totalTerritory += 1;
     totalArmy -= attackCost;
@@ -335,6 +342,7 @@ function loadFromStorage(){
     UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost);
     CalculateNextWar();
     LoadSettings();
+    TabClick("Buildings", "BuildingsTabButton")
     updateTerritoryText(attackCost, losesCost, nextIncome);
     LoadVisibleBUContainers(Object.keys(armyBuildings).length, Object.keys(armyUpgrades).length+1)
     

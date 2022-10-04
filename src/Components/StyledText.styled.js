@@ -40,6 +40,15 @@ export const DescText = styled.p`
     text-align: center;
     width: 50%;
 `
+export const ErrorText = styled.p`
+    margin-top: 5px;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    width: 50%;
+    color: red;
+`
+
 export const DetailText = styled.p`
     margin: 0px;
     font-size: 20px;
