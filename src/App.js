@@ -146,6 +146,8 @@ function App(){
           <ul>Changes:
             <li>Added another new setting, check the settings tab</li>
             <li>Added help tab</li>
+            <li>Added max input to buildings</li>
+            <li>Added error text to territory</li>
           </ul>
           <ul>WIP:
             <li>More territory features and upgrades</li>
