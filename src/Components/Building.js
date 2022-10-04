@@ -1,11 +1,12 @@
 import { Component } from "react";
-import  { Button } from "./Button.styled";
-import { buttonClick,getUnitPrice } from "../GameFunctions";
+import  { Button, MaxButton } from "./Button.styled";
+import { buttonClick,getMaxAffordableAmount,getUnitPrice } from "../GameFunctions";
 import { UpgradeText, UpgradeInfoText, UpgradeDescText, DescText, DetailText } from "./StyledText.styled"
 import { BuildingContainer } from "./Container.styled"
 import {Input} from "./Forms.styled";
 import {updateUnitsOwned} from "../GameFunctions";
 import { ThisButtonVisibility } from "../BuildingVisibilityHandling";
+import { maxSetting } from "../SettingsHandling";
 
 
 
@@ -26,17 +27,27 @@ class Building extends Component{
     handleInputChange(name){
         let userInputAmount = parseInt(document.getElementById(name+"input").value); 
         let userInputValue = this.props.price;
-        if (userInputAmount > 1 && userInputAmount < 10000){
+        if (userInputAmount > 1 && userInputAmount < 999 && maxSetting == true || userInputAmount > 1 && userInputAmount < 99999 && maxSetting == false){
             userInputValue = getUnitPrice(name, userInputAmount, this.props.price)
             document.getElementById(name+"button").textContent = ("Build "+userInputAmount.toLocaleString()+" for $"+userInputValue.toLocaleString())
             ThisButtonVisibility(name, userInputAmount)
         }
         else{
-            if (userInputAmount < 1)
+            if (userInputAmount < 1){
                 document.getElementById(name+"input").value = 1;
-            if (userInputAmount > 99999)
+                userInputAmount = 1;
+            }
+            else if (userInputAmount >= 999 && maxSetting == true){
+                document.getElementById(name+"input").value = getMaxAffordableAmount(name);
+                userInputAmount = getMaxAffordableAmount(name);
+            }
+            else if (userInputAmount >= 99999){
+                userInputAmount = 99999;
                 document.getElementById(name+"input").value = 99999;
-            userInputAmount = 1;
+            }
+            else
+                userInputAmount = 1;
+            ThisButtonVisibility(name, userInputAmount)
             userInputValue = getUnitPrice(name, userInputAmount, this.props.price)
             document.getElementById(name+"button").textContent = ("Build "+userInputAmount.toLocaleString()+" for $"+userInputValue.toLocaleString())
         }

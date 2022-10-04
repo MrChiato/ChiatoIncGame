@@ -1,17 +1,17 @@
 import { startGame,territoryClick,deleteSaveClick, attackClick, totalMoney, territoryIncome, armyRequirement } from "./GameFunctions";
-import { Container, BuildPanelContainer, TerritoryPanelContainer, BuildingUpgradeContainer,SavePanelContainer,TopContainer, TabContainer, TabButtons, TerritoryPanelInnerContainer, BUContainer } from "./Components/Container.styled";
+import { Container, BuildPanelContainer, TerritoryPanelContainer, BuildingUpgradeContainer,SavePanelContainer,TopContainer, TabContainer, TabButtons, TerritoryPanelInnerContainer, BUContainer, SettingsContainer, CheckBoxInput } from "./Components/Container.styled";
 import Building from "./Components/Building";
 import Upgrade from "./Components/Upgrades";
-import { StatsText,StatsInfoText,DescText,THText,InfoTable, ErrorText } from "./Components/StyledText.styled"
+import { StatsText,StatsInfoText,DescText,THText,InfoTable, ErrorText, HeaderText, HelpHeaderText, HelpText } from "./Components/StyledText.styled"
 import  { Button, ChangeTabButton } from "./Components/Button.styled";
 import {Input} from "./Components/Forms.styled";
-import { EnableDetailedStats } from "./SettingsHandling";
+import { EnableDetailedStats, ToggleMaxSetting } from "./SettingsHandling";
 import { GlobalStyle } from "./Components/globalstyle.styled";
 
 const startUnitPrice = 10000;
 const startUpgradePrice = 100000;
 const startUnitValue = 1;
-const versionNumber = "0.0.4"
+const versionNumber = "0.0.5"
 
 export const startingArmyWin = 200000;
 export const startingEnemyArmy = 20000;
@@ -83,6 +83,7 @@ function App(){
         <ChangeTabButton name="Warfare"></ChangeTabButton>
         <ChangeTabButton name="Statistics"></ChangeTabButton>
         <ChangeTabButton name="Settings"></ChangeTabButton>
+        <ChangeTabButton name="Help"></ChangeTabButton>
         <ChangeTabButton name="About"></ChangeTabButton>
       </TabButtons>
     <Container>
@@ -128,8 +129,14 @@ function App(){
       </TerritoryPanelContainer>
       </TabContainer>
       <TabContainer id="Settings" className="TabContainers">
-        <input type="checkbox" id="detailedSettingsBox" onChange={() => EnableDetailedStats()}/>
+        <SettingsContainer>
+        <CheckBoxInput type="checkbox" id="detailedSettingsBox" onChange={() => EnableDetailedStats()}/>
         <label>Enable detailed text for buildings and upgrades</label>
+        </SettingsContainer>
+        <SettingsContainer>
+        <CheckBoxInput type="checkbox" id="maxAmountSetting" onChange={() => ToggleMaxSetting()}/>
+        <label>Enable max buy amount, if you enter a number above 999 buildings<br/> it will automatically set buy amount to max affordable</label>
+        </SettingsContainer>
         <SavePanelContainer>
           <Button onClick={() => deleteSaveClick()}>Reset Game</Button>
         </SavePanelContainer>
@@ -137,10 +144,8 @@ function App(){
       <TabContainer id="About" className="TabContainers">
         <span>Changelog: version: {versionNumber}</span>
           <ul>Changes:
-            <li>Added a new setting, check the settings tab</li>
-            <li>Fixed a few bugs with the new ui</li>
-            <li>Fixed a bug where upgrade cost wasn't saved correctly</li>
-            <li>Fixed a bug where upgrade cost button wasn't updating correctly</li>
+            <li>Added another new setting, check the settings tab</li>
+            <li>Added help tab</li>
           </ul>
           <ul>WIP:
             <li>More territory features and upgrades</li>
@@ -159,6 +164,10 @@ function App(){
       </TabContainer>
       <TabContainer id="Statistics" className="TabContainers">
 
+      </TabContainer>
+      <TabContainer id="Help" className="TabContainers">
+        <HelpHeaderText>How to play</HelpHeaderText>
+        <HelpText>The basics of the game is to build Army strength with buildings.<br/>You then use this Army strength to go to war and earn money, or take over new territory to generate income.<br/>Be careful when you take over territory, you need to have enough army income to sustain the losses of defending the territory<br/>The war feature is a random roll between the army you send and the army the enemy has, whoever rolls higher wins, if you roll higher you will lose army equal to his roll.</HelpText>
       </TabContainer>
     </Container>
     </TopContainer>

@@ -260,11 +260,11 @@ function takeOverTerritory(){
     let errorTextField = document.getElementById("territoryError");
     errorTextField.textContent = "";
     if (attackCost > totalArmy){
-        errorTextField.textContent = "You do not have enough army to take over";
+        errorTextField.textContent = "You do not have enough army to take over this territory, you need atleast "+attackCost+" army strength";
         return
     }
     if (curArmyPerUpdate < ((attackCost/1000)**armyLossIncrease)){
-        errorTextField.textContent = "You do not have enough army income to hold this territory, construct more buildings";
+        errorTextField.textContent = "You do not have enough army income to defend this territory, construct more buildings, you need atleast "+((attackCost/1000)**armyLossIncrease)+" army per cycle.";
         return
     }
     
@@ -364,6 +364,38 @@ export function getUnitPrice(name, amount, price){
         i++;
     }
     return(totalPrice)
+}
+
+export function getMaxAffordableAmount(name){
+    let i = 0, maxAmount = 0, totalPrice = 0, thisBuildingPrice = 0
+
+    if (name in armyBuildings){
+        while(totalMoney>totalPrice){
+            thisBuildingPrice = (armyPrices[name]+((armyBuildings[name]+i)*armyPrices[name])/10)
+            totalPrice += thisBuildingPrice
+            maxAmount += 1
+            if (totalMoney<totalPrice){
+                totalPrice -= thisBuildingPrice;
+                maxAmount -= 1
+                break;
+            }
+            i++;
+        }
+    }
+    if (!(name in armyBuildings)){
+        while(totalMoney>totalPrice){
+            thisBuildingPrice = (armyPrices[name]+(i*armyPrices[name])/10)
+            totalPrice += thisBuildingPrice
+            maxAmount += 1
+            if (totalMoney<totalPrice){
+                totalPrice -= thisBuildingPrice;
+                maxAmount -= 1
+                break;
+            }
+            i++;
+        }
+    }
+    return(maxAmount)
 }
 
 function updateText(){

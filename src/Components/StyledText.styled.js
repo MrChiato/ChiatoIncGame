@@ -40,6 +40,22 @@ export const DescText = styled.p`
     text-align: center;
     width: 50%;
 `
+export const HelpText = styled.p`
+    margin-top: 5px;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+`
+
+export const HelpHeaderText = styled.h1`
+    margin-top: 5px;
+    font-size: 40px;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+`
+
 export const ErrorText = styled.p`
     margin-top: 5px;
     font-size: 20px;

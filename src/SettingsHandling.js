@@ -2,23 +2,37 @@ import { armyPrices, startingValues, upgradePrices } from "./App";
 import { armyBuildings, armyUpgrades, armyValue, getUnitPrice, saveUpgradePrices } from "./GameFunctions";
 
 export let detailedStats = false;
+export let maxSetting = true;
 
 export function SaveSettings(){
     let data = {
-        detailedStats: detailedStats
+        detailedStats: detailedStats,
+        maxSetting: maxSetting
     }
     window.localStorage.setItem("Settings", JSON.stringify(data))
 }
 
 export function LoadSettings(){
     let loadedData = JSON.parse(window.localStorage.getItem("Settings"))
+
     if(loadedData === null){
         detailedStats = false
+        maxSetting = true;
+        document.getElementById("maxAmountSetting").checked = true
         return
     }
+
     detailedStats = loadedData["detailedStats"]
+    maxSetting = loadedData["maxSetting"]
+
     if (detailedStats == true)
         document.getElementById("detailedSettingsBox").checked = true
+
+    if (maxSetting === false)
+        document.getElementById("maxAmountSetting").checked = false
+    else
+        document.getElementById("maxAmountSetting").checked = true
+
     UpdateDetailedText()
 }
 
@@ -30,6 +44,15 @@ export function EnableDetailedStats(){
 
         
     UpdateDetailedText()
+    SaveSettings();
+}
+
+export function ToggleMaxSetting(){
+    if(document.getElementById("maxAmountSetting").checked)
+        maxSetting = true;
+    else
+        maxSetting = false;
+
     SaveSettings();
 }
 

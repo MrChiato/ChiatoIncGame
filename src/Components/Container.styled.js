@@ -87,6 +87,19 @@ export const TabButtons = styled.div`
     justify-content: center;
 `
 
+export const SettingsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+`
+
+export const CheckBoxInput = styled.input`
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+`
+
 export const TabContainer = styled.div`
     display: none;
 `
