@@ -32,6 +32,10 @@ class Building extends Component{
             ThisButtonVisibility(name, userInputAmount)
         }
         else{
+            if (userInputAmount < 1)
+                document.getElementById(name+"input").value = 1;
+            if (userInputAmount > 99999)
+                document.getElementById(name+"input").value = 99999;
             userInputAmount = 1;
             userInputValue = getUnitPrice(name, userInputAmount, this.props.price)
             document.getElementById(name+"button").textContent = ("Build "+userInputAmount.toLocaleString()+" for $"+userInputValue.toLocaleString())

@@ -1,5 +1,5 @@
 import { armyPrices, upgradePrices } from "./App";
-import {  getUnitPrice, totalMoney } from "./GameFunctions";
+import {  getUnitPrice, saveUpgradePrices, totalMoney } from "./GameFunctions";
 
 
 export function LoadVisibleBUContainers(buildingsOwned, upgradesOwned){
@@ -50,7 +50,10 @@ export function ButtonAffordableVisibility(){
         }
     }
         for (let upgrade in upgradePrices){
-            opacityPercentage = Math.floor(totalMoney/getUnitPrice(upgrade, 1, upgradePrices[upgrade])*100)
+            if (upgrade in saveUpgradePrices)
+                opacityPercentage = Math.floor(totalMoney/getUnitPrice(upgrade, 1, saveUpgradePrices[upgrade])*100)
+            else
+                opacityPercentage = Math.floor(totalMoney/getUnitPrice(upgrade, 1, upgradePrices[upgrade])*100)
             if (opacityPercentage < 15)
                 opacityPercentage = 15;
             if (opacityPercentage >= 100){

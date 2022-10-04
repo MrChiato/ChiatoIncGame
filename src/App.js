@@ -81,9 +81,9 @@ function App(){
       <TabButtons>
         <ChangeTabButton name="Buildings"></ChangeTabButton>
         <ChangeTabButton name="Warfare"></ChangeTabButton>
-        <ChangeTabButton name="About"></ChangeTabButton>
-        <ChangeTabButton name="Settings"></ChangeTabButton>
         <ChangeTabButton name="Statistics"></ChangeTabButton>
+        <ChangeTabButton name="Settings"></ChangeTabButton>
+        <ChangeTabButton name="About"></ChangeTabButton>
       </TabButtons>
     <Container>
       <TabContainer id="Buildings" className="TabContainers">
@@ -126,10 +126,17 @@ function App(){
         </TerritoryPanelInnerContainer>
       </TerritoryPanelContainer>
       </TabContainer>
+      <TabContainer id="Settings" className="TabContainers">
+        <input type="checkbox" id="detailedSettingsBox" onChange={() => EnableDetailedStats()}/>
+        <label>Enable detailed text for buildings and upgrades</label>
+        <SavePanelContainer>
+          <Button onClick={() => deleteSaveClick()}>Reset Game</Button>
+        </SavePanelContainer>
+      </TabContainer>
       <TabContainer id="About" className="TabContainers">
         <span>Changelog: version: {versionNumber}</span>
           <ul>Changes:
-            <li>Added more settings, check the settings tab</li>
+            <li>Added a new setting, check the settings tab</li>
             <li>Fixed a few bugs with the new ui</li>
             <li>Fixed a bug where upgrade cost wasn't saved correctly</li>
           </ul>
@@ -137,17 +144,19 @@ function App(){
             <li>More territory features and upgrades</li>
             <li>Prestige feature to start on a new planet, reset game with prestige points</li>
           </ul>
+          <BuildPanelContainer>
           <DescText>Join the discord server to discuss the game, give feedback or report bugs :)</DescText>
           <a href="https://discord.gg/6wvUZcsnyt" target="_blank" title="Join the discord server!">
             <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/625e5fcef7ab80b8c1fe559e_Discord-Logo-Color.png"></img>
           </a>
+          <DescText>Fund development of this game by buying me a coffee, thanks a lot!</DescText>
+          <a href="https://www.buymeacoffee.com/Chiato" target="_blank" title="Buy me a coffee!">
+            <img src="https://ps.w.org/buymeacoffee/assets/icon-256x256.png?rev=2424125"></img>
+          </a>
+          </BuildPanelContainer>
       </TabContainer>
-      <TabContainer id="Settings" className="TabContainers">
-        <input type="checkbox" id="detailedSettingsBox" onChange={() => EnableDetailedStats()}/>
-        <label>Enable detailed text for buildings and upgrades</label>
-        <SavePanelContainer>
-          <Button onClick={() => deleteSaveClick()}>Reset Game</Button>
-        </SavePanelContainer>
+      <TabContainer id="Statistics" className="TabContainers">
+
       </TabContainer>
     </Container>
     </TopContainer>

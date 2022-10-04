@@ -12,6 +12,10 @@ export function SaveSettings(){
 
 export function LoadSettings(){
     let loadedData = JSON.parse(window.localStorage.getItem("Settings"))
+    if(loadedData === null){
+        detailedStats = false
+        return
+    }
     detailedStats = loadedData["detailedStats"]
     if (detailedStats == true)
         document.getElementById("detailedSettingsBox").checked = true
