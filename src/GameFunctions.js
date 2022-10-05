@@ -19,7 +19,7 @@ let armyLossIncrease = 2;
 export let territoryIncome = 250;
 let territoryLoses = 0;
 
-export let totalMoney = 250000000;
+export let totalMoney = 250000;
 export let totalArmy = 0;
 
 let armyPerUpdate = 0;
