@@ -1,20 +1,18 @@
 import { startGame,territoryClick,deleteSaveClick, attackClick, totalMoney, territoryIncome, armyRequirement } from "./GameFunctions";
-import { Container, BuildPanelContainer, TerritoryPanelContainer, BuildingUpgradeContainer,SavePanelContainer,TopContainer, TabContainer, TabButtons, TerritoryPanelInnerContainer, BUContainer, SettingsContainer, CheckBoxInput } from "./Components/Container.styled";
-import Building from "./Components/Building";
-import Upgrade from "./Components/Upgrades";
-import { StatsText,StatsInfoText,DescText,THText,InfoTable, ErrorText, HeaderText, HelpHeaderText, HelpText } from "./Components/StyledText.styled"
+import { Container, BuildPanelContainer, TerritoryPanelContainer, SavePanelContainer,TopContainer, TabContainer, TabButtons, TerritoryPanelInnerContainer, BUContainer, SettingsContainer, CheckBoxInput } from "./Components/Container.styled";
+import { StatsText,StatsInfoText,DescText,THText,InfoTable, ErrorText, HelpHeaderText, HelpText, UpgradeText, DetailText, HelpHeader2Text } from "./Components/StyledText.styled"
 import  { Button, ChangeTabButton, SettingsButton } from "./Components/Button.styled";
 import {Input, SaveInput} from "./Components/Forms.styled";
 import { EnableDetailedStats, ToggleMaxSetting } from "./SettingsHandling";
-import { GlobalStyle } from "./Components/globalstyle.styled";
 import { ArmyInputChange } from "./WarFunctions";
 import { Stats } from "./Components/Statistics";
 import { LoadStringButton, ShowStringInField } from "./HandleStringSaveLoad";
+import { PrestigeBuilder, PrestigeCycleSpeed, PrestigeHalfUnitPrice, PrestigeLevelPress } from "./PrestigeLeveling";
 
 const startUnitPrice = 10000;
 const startUpgradePrice = 100000;
 const startUnitValue = 1;
-const versionNumber = "0.0.5"
+const versionNumber = "0.0.6"
 
 export const startingArmyWin = 200000;
 export const startingEnemyArmy = 20000;
@@ -85,6 +83,7 @@ function App(){
         <ChangeTabButton name="Buildings"></ChangeTabButton>
         <ChangeTabButton name="Warfare"></ChangeTabButton>
         <ChangeTabButton name="Statistics"></ChangeTabButton>
+        <ChangeTabButton bg="rgb(255,215,0)" bs="rgba(215, 215, 0, 1)" name="Prestige"></ChangeTabButton>
         <ChangeTabButton name="Settings"></ChangeTabButton>
         <ChangeTabButton name="Help"></ChangeTabButton>
         <ChangeTabButton name="About"></ChangeTabButton>
@@ -156,17 +155,11 @@ function App(){
       <TabContainer id="About" className="TabContainers">
         <span>Changelog: version: {versionNumber}</span>
           <ul>Changes:
-            <li>Added another new setting, check the settings tab</li>
-            <li>Added help tab</li>
-            <li>Added max input to buildings</li>
-            <li>Added error text to territory</li>
-            <li>Max input now applies to sending units to war aswell</li>
-            <li>Fixed an error when trying to buy something you cant afford, which you don't own atleast one of already</li>
-            <li>Added a new setting, lets you get a string copy of your save to use on other devices, share for bugs or save for later</li>
-          </ul>
-          <ul>WIP:
-            <li>More territory features and upgrades</li>
-            <li>Prestige feature to start on a new planet, reset game with prestige points</li>
+            <li>First iteration of a prestige system, balancing and features to come!</li>
+            <li>New save system allows to save your saves as a line of text, to share between devices, with friends or for bug reports</li>
+            <li>Winning probability added to war feature</li>
+            <li>Fixed a bug that did enemy army size wrong (too high), woops!</li>
+            <li>Few more bug fixes, thanks guys!</li>
           </ul>
           <BuildPanelContainer>
           <DescText>Join the discord server to discuss the game, give feedback or report bugs :)</DescText>
@@ -185,6 +178,24 @@ function App(){
       <TabContainer id="Help" className="TabContainers">
         <HelpHeaderText>How to play</HelpHeaderText>
         <HelpText>The basics of the game is to build Army strength with buildings.<br/>You then use this Army strength to go to war and earn money, or take over new territory to generate income.<br/>Be careful when you take over territory, you need to have enough army income to sustain the losses of defending the territory<br/>The war feature is a random roll between the army you send and the army the enemy has, whoever rolls higher wins, if you roll higher you will lose army equal to his roll.</HelpText>
+      </TabContainer>
+      <TabContainer id="Prestige" className="TabContainers">
+        <BuildPanelContainer>
+        <HelpHeaderText>Prestige! (Beta)</HelpHeaderText>
+        <HelpText>The first version of prestige is here! More features will come soon!<br/>You can prestige to reset the game, you get (1) prestige point for every time you prestige. <br/>Prestige points grant very powerful upgrades, allowing you to progres further and faster!<br/>Later in development there will be upgrades and buildings that are unreachable without prestige levels, for now it is just in for testing!</HelpText>
+        <HelpText id="PrestigeCost">Here goes prestige cost</HelpText>
+        <Button onClick={() => PrestigeLevelPress()} >Prestige now!</Button>
+        <ErrorText id="PrestigeErrorText"/>
+        <HelpHeaderText id="PrestigeLevelText">Prestige level: 0</HelpHeaderText>
+        <HelpHeader2Text id="PrestigePointsText">Prestige points: 0</HelpHeader2Text>
+        <ErrorText id="PrestigeLevelingErrorText"/>
+        <StatsInfoText id="CycleLevelText">Cycle speed upgrades: 0</StatsInfoText>
+        <DetailText>Each cycle speed upgrade halves the time of a cycle</DetailText>
+        <Button onClick={() => PrestigeCycleSpeed()}>Upgrade Cycle Speed</Button>
+        <StatsInfoText id="PrestigeBuilder">Barrack Builders: 0</StatsInfoText>
+        <DetailText>Each barrack builder will construct 1 barrack every cycle (max 999999), but you can no longer buy barracks</DetailText>
+        <Button onClick={() => PrestigeBuilder()}>Buy barrack builder</Button>
+        </BuildPanelContainer>
       </TabContainer>
     </Container>
     </TopContainer>

@@ -19,9 +19,8 @@ function CreateStringData(){
     stringCheck = fullString.replace(/\D/g,'')
     parseInt(stringCheck)
     let sum = 0;
-    while(stringCheck){
-        sum += stringCheck%10;
-        stringCheck = Math.floor(stringCheck/10)
+    for(let char in stringCheck){
+        sum += (stringCheck[char]+1)*7
     }
     fullString += (",\"cc\":"+sum)
     return(fullString)
@@ -61,9 +60,8 @@ function CheckForCheat(stringCheck){
     let sum = 0;
     stringCheck = stringCheck.slice(0, -5)
     stringCheck = stringCheck.replace(/\D/g,'')
-    while(stringCheck){
-        sum += stringCheck%10;
-        stringCheck = Math.floor(stringCheck/10)
+    for(let char in stringCheck){
+        sum += (stringCheck[char]+1)*7
     }
     return sum
 }

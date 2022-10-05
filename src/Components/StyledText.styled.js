@@ -55,6 +55,13 @@ export const HelpHeaderText = styled.h1`
     text-align: center;
     width: 100%;
 `
+export const HelpHeader2Text = styled.h1`
+    margin-top: -25px;
+    font-size: 30px;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+`
 
 export const ErrorText = styled.p`
     margin-top: 5px;

@@ -1,10 +1,11 @@
 import { armyPrices, startingArmyWin, startingEnemyArmy } from "./App";
 import { ButtonAffordableVisibility, HandleVisibility, LoadVisibleBUContainers, ShowNextBuildingContainer, ShowNextUpgradeContainer } from "./BuildingVisibilityHandling";
+import { BuilderBuildBuilding, cycleLevel, LoadPrestige, OfflineBuilders, prestigeBuilders, prestigeLevel, prestigePoints, unitHalf, upgHalf } from "./PrestigeLeveling";
 import { LoadSettings, UpdateDetailedText } from "./SettingsHandling";
 import { TabClick } from "./TabHandling";
 import { FightArmy, UpdateWarText } from "./WarFunctions";
 
-const timeBetweenUpdates = 1000;
+export const timeBetweenUpdates = 1000;
 const timeBetweenSaves = 500;
 const loadtime = 50;
 
@@ -18,20 +19,20 @@ let armyLossIncrease = 2;
 export let territoryIncome = 250;
 let territoryLoses = 0;
 
-export let totalMoney = 250000;
+export let totalMoney = 250000000;
 export let totalArmy = 0;
 
 let armyPerUpdate = 0;
 let curArmyPerUpdate = 0;
 
-let totalWarsWon = 0;
+export let totalWarsWon = 0;
 let totalArmyWon = 0;
 let totalArmyLost = 0;
 export const armyRequirement = 10000;
 export const winMultiplier = 2;
 export const armyGrowth = 2500;
 
-let updateInterval;
+export let updateInterval;
 
 export let armyBuildings = {
 }
@@ -50,10 +51,10 @@ export let saveUpgradePrices = {
 
 export function startGame(){
     if (gameIsStarted === false){ 
-        setInterval(update, timeBetweenUpdates);
+        updateInterval = setInterval(update, timeBetweenUpdates);
         loadGameClick()
         setTimeout(() => {
-            updateInterval = setInterval(saveToStorage, timeBetweenSaves);
+            setInterval(saveToStorage, timeBetweenSaves);
         }, loadtime);
         gameIsStarted = true;
     }
@@ -78,7 +79,7 @@ export function saveGameClick(){
 }
 
 export function attackClick(){
-    let warOutcome = FightArmy(totalArmy, totalWarsWon, territoryIncome);
+    let warOutcome = FightArmy(totalArmy, totalWarsWon);
     if (warOutcome == false)
         return
     if (warOutcome.win == true){
@@ -98,7 +99,7 @@ export function attackClick(){
 }
 
 function CalculateNextWar(){
-    let nextWarEnemyForce = ((totalWarsWon+1)**2) *  armyGrowth * (totalWarsWon+1)
+    let nextWarEnemyForce = ((totalWarsWon)**2) *  armyGrowth * (totalWarsWon+1)
     let nextWarWin = nextWarEnemyForce*winMultiplier*totalWarsWon
     if (totalWarsWon == 0){
         nextWarWin = startingArmyWin
@@ -149,9 +150,10 @@ export function buttonClick(price, value, amount, name, type){
     UpdateDetailedText()
 }
 
-function update(){
+export function update(){
     addIncome();
     HandleVisibility()
+    BuilderBuildBuilding()
     if (totalArmy < 0){
         totalTerritory -= 1;
         territoryIncome -= (totalTerritory*attackCostIncrease)*totalTerritory
@@ -304,12 +306,18 @@ function saveToStorage(){
         warWins: totalWarsWon,
         warCash: totalArmyWon,
         warLost: totalArmyLost,
-        saveTime: saveTime
+        saveTime: saveTime,
+        pLevel: prestigeLevel,
+        pPoints: prestigePoints,
+        pCycle: cycleLevel,
+        uHalf: unitHalf,
+        upHalf: upgHalf,
+        pBuilder: prestigeBuilders
     }
     window.localStorage.setItem("Save", JSON.stringify(data))
 }
 
-function loadFromStorage(){
+export function loadFromStorage(){
     let loadedData = JSON.parse(window.localStorage.getItem("Save"))
     LoadSavedData(loadedData)
 }
@@ -345,6 +353,7 @@ export function LoadSavedData(loadedData){
         document.getElementById(upgrade+"UpgradeButton").textContent = ("Upgrade for $"+saveUpgradePrices[upgrade].toLocaleString())
     }
     armyPerUpdate = calculateIncome() - territoryLoses;
+    LoadPrestige(loadedData)
     OfflineIncome(loadSaveTime)
     updateText();
     UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost);
@@ -420,7 +429,7 @@ function updateTerritoryText(attackCost, losesCost, nextIncome){
     document.getElementById("attackCostText").textContent = ("Attacking now will require "+attackCost.toLocaleString()+" army forces and take "+losesCost.toLocaleString()+" army to defend and generate $"+nextIncome.toLocaleString()+" income");
 }
 
-function GetNowInSeconds(){
+export function GetNowInSeconds(){
     const timeNow = new Date()
     const timeNowInSec = Math.round(timeNow.getTime() / 1000)
     return timeNowInSec
@@ -447,7 +456,7 @@ function OfflineIncome(savedTime){
 
     document.getElementById("offlineIncomeText").textContent = ("While offline you made $"+offlineCash.toLocaleString());
     document.getElementById("offlineArmyText").textContent = ("While offline your army increased by "+offlineArmy.toLocaleString());
-
+    OfflineBuilders(secsOffline)
     setTimeout(RemoveOfflineText, 30000);
 }
 

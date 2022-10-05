@@ -55,13 +55,13 @@ export const SettingsButton = styled.button`
 const TabButton = styled.button`
     border-radius: 10px;
     border: 2px solid grey;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 10px ${({bs}) => bs || 'rgba(0, 0, 0, 0.15)'};
     cursor: pointer;
     font-size: 16px;
     font-weight: 700;
     padding: 15px 20px;
     margin: 10px;
-    background-color: white;
+    background-color: ${({bg}) => bg || 'white'};
     color: black;
 
     &:hover{
@@ -84,7 +84,7 @@ const TabButton = styled.button`
 export class ChangeTabButton extends Component{
     render(){
         return(
-            <TabButton className="TabButtons" id={this.props.name+"TabButton"} onClick={() => TabClick(this.props.name, this.props.name+"TabButton")}>{this.props.name}</TabButton>
+            <TabButton bg={this.props.bg} bs={this.props.bs} className="TabButtons" id={this.props.name+"TabButton"} onClick={() => TabClick(this.props.name, this.props.name+"TabButton")}>{this.props.name}</TabButton>
         )
     }
 }

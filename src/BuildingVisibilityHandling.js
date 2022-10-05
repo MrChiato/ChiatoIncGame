@@ -25,6 +25,21 @@ export function ShowNextUpgradeContainer(buildingsOwned){
     totalUpgradeContainers[buildingsOwned].style.visibility = "visible"
 }
 
+export function HideAllContainers(){
+    let totalBUContainers = document.getElementsByClassName("BUContainer");
+    let totalUpgradeContainers = document.getElementsByClassName("UpgContainer");
+    for (let container in totalBUContainers){
+        container = parseInt(container)
+        if(container > 0 && !isNaN(container))
+        totalBUContainers[container].style.visibility = "hidden"
+    }
+    for (let container in totalUpgradeContainers){
+        container = parseInt(container)
+        if(!isNaN(container))
+            totalUpgradeContainers[container].style.visibility = "hidden"
+    }
+}
+
 export function ButtonAffordableVisibility(){
     let opacityPercentage = 0;
     for (let building in armyPrices){

@@ -1,6 +1,6 @@
 import { startingArmyWin, startingEnemyArmy } from "./App";
-import { armyGrowth, armyRequirement, totalArmy, winMultiplier } from "./GameFunctions";
-import { maxSetting } from "./SettingsHandling";
+import { armyGrowth, armyRequirement, totalArmy, totalWarsWon, winMultiplier } from "./GameFunctions";
+import { detailedStats, maxSetting } from "./SettingsHandling";
 
 
 export function ArmyInputChange(){
@@ -9,6 +9,19 @@ export function ArmyInputChange(){
         userArmyInput = totalArmy
         document.getElementById("armyToSendInput").value = userArmyInput
     }
+    if (detailedStats){
+        let enemyArmy = EnemyArmy(totalWarsWon)
+        if (userArmyInput >= (enemyArmy/2))
+            WinProbability(userArmyInput, enemyArmy);
+        else
+            document.getElementById("warResult").textContent = ""
+    }
+}
+
+function WinProbability(userArmy, enemyArmy){
+    let chanceToWin = Math.floor((userArmy/(userArmy+enemyArmy))*100)
+    document.getElementById("warResult").style.color = "black"
+    document.getElementById("warResult").textContent = ("Your chance of winning with "+userArmy.toLocaleString()+" army vs "+enemyArmy.toLocaleString()+" army is "+chanceToWin+"%");
 }
 
 export function FightArmy(curTotalArmy, curTotalWarsWon){
@@ -46,14 +59,12 @@ export function FightArmy(curTotalArmy, curTotalWarsWon){
 
         let prize = CalculateWin(curEnemyArmy, curTotalWarsWon);
         let win = true, armyLost = enemyRoll;
-        console.log("enemy roll: "+enemyRoll+" army roll: "+armyRoll+" win: "+win)
         WarResultText(win, prize, armyLost)
         return {win, prize, armyLost}
     }
 
     else{
         let win = false, prize = 0, armyLost = userArmyInput;
-        console.log("enemy roll: "+enemyRoll+" army roll: "+armyRoll+" win: "+win)
         WarResultText(win, prize, armyLost)
         return {win, prize, armyLost};
     }
@@ -82,6 +93,7 @@ function CalculateWin(enemyArmy, totalWarsWon){
                 curWin = startingArmyWin*3
     return curWin;
 }
+
 
 export function UpdateWarText(totalWarsWon, totalArmyWon, totalArmyLost){
     document.getElementById("warsWonText").textContent = ("Wars won: "+totalWarsWon.toLocaleString());
