@@ -7,7 +7,7 @@ import { EnableDetailedStats, ToggleMaxSetting } from "./SettingsHandling";
 import { ArmyInputChange } from "./WarFunctions";
 import { Stats } from "./Components/Statistics";
 import { LoadStringButton, ShowStringInField } from "./HandleStringSaveLoad";
-import { PrestigeBuilder, PrestigeCycleSpeed, PrestigeHalfUnitPrice, PrestigeLevelPress } from "./PrestigeLeveling";
+import { PrestigeBuilder, PrestigeCycleSpeed, PrestigeHalfUnitPrice, PrestigeLevelPress, prestigeRequirement } from "./PrestigeLeveling";
 
 const startUnitPrice = 10000;
 const startUpgradePrice = 100000;
@@ -183,7 +183,7 @@ function App(){
         <BuildPanelContainer>
         <HelpHeaderText>Prestige! (Beta)</HelpHeaderText>
         <HelpText>The first version of prestige is here! More features will come soon!<br/>You can prestige to reset the game, you get (1) prestige point for every time you prestige. <br/>Prestige points grant very powerful upgrades, allowing you to progres further and faster!<br/>Later in development there will be upgrades and buildings that are unreachable without prestige levels, for now it is just in for testing!</HelpText>
-        <HelpText id="PrestigeCost">Here goes prestige cost</HelpText>
+        <HelpText id="PrestigeCost">Raising your prestige level will cost ${prestigeRequirement.toLocaleString()}</HelpText>
         <Button onClick={() => PrestigeLevelPress()} >Prestige now!</Button>
         <ErrorText id="PrestigeErrorText"/>
         <HelpHeaderText id="PrestigeLevelText">Prestige level: 0</HelpHeaderText>

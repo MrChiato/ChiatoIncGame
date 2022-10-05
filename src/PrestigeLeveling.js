@@ -1,10 +1,9 @@
 import { armyPrices } from "./App";
-import { ButtonAffordableVisibility, HideAllContainers, ShowNextUpgradeContainer } from "./BuildingVisibilityHandling";
+import { HideAllContainers, ShowNextUpgradeContainer } from "./BuildingVisibilityHandling";
 import { armyBuildings, armyValue, GetNowInSeconds, loadFromStorage, timeBetweenUpdates, totalMoney, update, updateInterval } from "./GameFunctions"
-import { UpdateDetailedText } from "./SettingsHandling";
 
 export let prestigeLevel = 0, prestigePoints = 0, cycleLevel = 0, unitHalf = 0, upgHalf = 0, prestigeBuilders = 0
-let prestigeRequirement = 9
+export let prestigeRequirement = 9999999999
 export let cycleUpdateInterval;
 
 export function PrestigeLevelPress(){
@@ -158,8 +157,7 @@ export function OfflineBuilders(secsOffline){
     if (name in armyBuildings){
         if(armyBuildings[name] < 999999)
             armyBuildings[name] += prestigeBuilders*secsOffline;
-            document.getElementById("BarrackdescText").style.display = "block"
-            document.getElementById("BarrackdescText").textContent = ("Your builders created "+(prestigeBuilders*secsOffline).toLocaleString()+" barracks while you were offline")
+            document.getElementById("BarrackofflineStat").textContent = ("Your builders created "+(prestigeBuilders*secsOffline).toLocaleString()+" barracks while you were offline")
             document.getElementById(name).textContent = ("You currently own "+armyBuildings[name].toLocaleString()+" "+name+"s");
             document.getElementById(name+"perCycle").textContent = ("Army increased by "+(armyBuildings[name]).toLocaleString()+" per cycle");
     }

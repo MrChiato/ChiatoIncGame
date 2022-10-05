@@ -58,6 +58,7 @@ class Building extends Component{
                 <UpgradeText >Build {this.props.name}</UpgradeText>
                 <UpgradeDescText >{this.props.name}s create {this.props.unit}s for your army</UpgradeDescText>
                 <DetailText id={this.props.name+"detailedStats"}></DetailText>
+                <DetailText id={this.props.name+"offlineStat"}></DetailText>
                 <UpgradeDescText id={this.props.name+"descText"}>Each {this.props.unit} increases {this.props.type} strength by {this.props.value.toLocaleString()}</UpgradeDescText>
                 <UpgradeInfoText id={this.props.name}>You currently own 0 {this.props.name}s</UpgradeInfoText>
                 <UpgradeInfoText id={this.props.name+"perCycle"}>Army increased by 0 per cycle</UpgradeInfoText>
