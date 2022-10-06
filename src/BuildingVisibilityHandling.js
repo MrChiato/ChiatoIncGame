@@ -53,7 +53,7 @@ export function ButtonAffordableVisibility(){
     let warTab = document.getElementById("WarfareTabButton")
     let territoryReady, warReady
     
-    if (totalArmy > getTerritoryAttackCost() && curArmyPerUpdate > getNextTerritoryUnitCost()){
+    if (totalArmy > getTerritoryAttackCost() && curArmyPerUpdate >= getTerritoryUnitCost()){
         warTab.style.boxShadow= "0 0 10px rgba(0, 0, 255, 0.50)"
         territoryButton.style.border = "2px solid green"
         territoryReady = true;

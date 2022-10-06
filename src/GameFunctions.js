@@ -47,6 +47,10 @@ export let saveUpgradePrices = {
 
 }
 
+export let saveIncreasedPrices = {
+
+}
+
 export function setMoney(money){
     totalMoney += money
 }
@@ -175,10 +179,8 @@ export function update(){
     addIncome();
     HandleVisibility()
     BuilderBuildBuilding()
-    if (totalArmy < 0){
-        totalTerritory -= 1;
-        territoryIncome -= (totalTerritory*attackCostIncrease)*totalTerritory
-    }
+    if (curArmyPerUpdate < 0)
+        curArmyPerUpdate = 0;
     updateText();
 }
 
@@ -316,25 +318,22 @@ function takeOverTerritory(){
 }
 
 function EarlyGameTerritory(){
-    let earlyTerritoryCost = [0, 100, 500, 1000, 3000, 10000, 20000, 30000, 50000 ]
-    let earlyTerritoryIncome = [100, 150, 300, 700, 2000, 5000, 10000, 20000, 30000 ]
-    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 1000, 2500 ]
 
     let t = totalTerritory
     let errorTextField = document.getElementById("territoryError");
 
-    if (earlyTerritoryCost[t] > totalArmy){
-        errorTextField.textContent = "You do not have enough army to take over this territory, you need atleast "+earlyTerritoryCost[t]+" army strength";
+    if (getNextTerritoryAttackCost() > totalArmy){
+        errorTextField.textContent = "You do not have enough army to take over this territory, you need atleast "+getNextTerritoryAttackCost()+" army strength";
         return
     }
-    if (curArmyPerUpdate < earlyTerritoryUnit[t]){
-        errorTextField.textContent = "You do not have enough army income to defend this territory, construct more buildings, you need atleast "+earlyTerritoryUnit[t]+" army per cycle.";
+    if (curArmyPerUpdate < getNextTerritoryUnitCost()){
+        errorTextField.textContent = "You do not have enough army income to defend this territory, construct more buildings, you need atleast "+getTerritoryUnitCost()+" army per cycle.";
         return
     }
+    totalArmy -= getTerritoryAttackCost()
+    territoryIncome += getTerritoryIncome()
+    territoryLoses += getTerritoryUnitCost()
     totalTerritory += 1;
-    totalArmy -= earlyTerritoryCost[t]
-    territoryIncome += earlyTerritoryIncome[t]
-    territoryLoses += earlyTerritoryUnit[t]
     
     updateText();
     updateTerritoryText();
@@ -359,20 +358,20 @@ function getNextTerritoryAttackCost(){
 }
 
 export function getTerritoryIncome(){
-    let earlyTerritoryIncome = [100, 150, 300, 700, 2000, 5000, 10000, 20000, 30000 ]
+    let earlyTerritoryIncome = [50, 100, 150, 250, 400, 600, 900, 1500, 2000 ]
     if (totalTerritory < 9)
         return earlyTerritoryIncome[totalTerritory]
 
-    let thisIncome = totalTerritory**2*500
+    let thisIncome = totalTerritory**2*25
     return thisIncome
 }
 
 function getNextTerritoryIncome(){
-    let earlyTerritoryIncome = [100, 150, 300, 700, 2000, 5000, 10000, 20000, 30000 ]
+    let earlyTerritoryIncome = [50, 100, 150, 250, 400, 600, 900, 1500, 2000 ]
     if (totalTerritory < 9)
         return earlyTerritoryIncome[totalTerritory]
 
-    let nextIncome = (totalTerritory+1)**2*500
+    let nextIncome = (totalTerritory+1)**2*25
     return nextIncome
 }
 
@@ -473,7 +472,7 @@ export function getUnitPrice(name, amount, price){
         if (amount === 1)
             return(price)
         while(i<amount){
-            totalPrice += (price+(i*price)/10)
+            totalPrice += (price+(((i)*price)/10)*(i))
             i++;
         }
     }
@@ -482,7 +481,7 @@ export function getUnitPrice(name, amount, price){
         return (totalPrice)
     }
     while(i<amount){
-        totalPrice += (price+((armyBuildings[name]+i)*price)/10)
+        totalPrice += (price+(((armyBuildings[name]+i)*price)/10)*(armyBuildings[name]+i))
         i++;
     }
     return(totalPrice)
@@ -490,10 +489,9 @@ export function getUnitPrice(name, amount, price){
 
 export function getMaxAffordableAmount(name){
     let i = 0, maxAmount = 0, totalPrice = 0, thisBuildingPrice = 0
-
     if (name in armyBuildings){
         while(totalMoney>totalPrice){
-            thisBuildingPrice = (armyPrices[name]+((armyBuildings[name]+i)*armyPrices[name])/10)
+            thisBuildingPrice = (armyPrices[name]+(((armyBuildings[name]+i)*armyPrices[name])/10)*(armyBuildings[name]+i))
             totalPrice += thisBuildingPrice
             maxAmount += 1
             if (totalMoney<totalPrice){
@@ -506,7 +504,7 @@ export function getMaxAffordableAmount(name){
     }
     if (!(name in armyBuildings)){
         while(totalMoney>totalPrice){
-            thisBuildingPrice = (armyPrices[name]+(i*armyPrices[name])/10)
+            thisBuildingPrice = (armyPrices[name]+(((i*armyPrices[name])/10)*(i)))
             totalPrice += thisBuildingPrice
             maxAmount += 1
             if (totalMoney<totalPrice){
