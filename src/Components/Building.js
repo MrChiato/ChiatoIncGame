@@ -1,7 +1,7 @@
 import { Component } from "react";
-import  { Button, MaxButton } from "./Button.styled";
+import  { Button } from "./Button.styled";
 import { buttonClick,getMaxAffordableAmount,getUnitPrice } from "../GameFunctions";
-import { UpgradeText, UpgradeInfoText, UpgradeDescText, DescText, DetailText } from "./StyledText.styled"
+import { UpgradeText, UpgradeInfoText, UpgradeDescText, DetailText } from "./StyledText.styled"
 import { BuildingContainer } from "./Container.styled"
 import {Input} from "./Forms.styled";
 import {updateUnitsOwned} from "../GameFunctions";

@@ -1,10 +1,16 @@
 import { armyPrices, upgradePrices } from "./App";
-import {  getUnitPrice, saveUpgradePrices, totalMoney } from "./GameFunctions";
+import {  armyBuildings, armyUpgrades, curArmyPerUpdate, getNextTerritoryUnitCost, getTerritoryAttackCost, getTerritoryUnitCost, getUnitPrice, saveUpgradePrices, totalArmy, totalMoney, totalWarsWon } from "./GameFunctions";
+import { EnemyArmy } from "./WarFunctions";
 
 
 export function LoadVisibleBUContainers(buildingsOwned, upgradesOwned){
     let totalBUContainers = document.getElementsByClassName("BUContainer");
     let totalUpgradeContainers = document.getElementsByClassName("UpgContainer");
+
+    if ("Embassy" in armyBuildings)
+        buildingsOwned -= 1;
+    if ("Embassy" in armyUpgrades)
+        upgradesOwned -= 1;
 
     for (let i = 0; i<upgradesOwned; i++){
         totalBUContainers[i].style.visibility = "visible"
@@ -42,8 +48,43 @@ export function HideAllContainers(){
 
 export function ButtonAffordableVisibility(){
     let opacityPercentage = 0;
+    let territoryButton = document.getElementById("TerritoryButton")
+    let attackButton = document.getElementById("AttackButton")
+    let warTab = document.getElementById("WarfareTabButton")
+    let territoryReady, warReady
+    
+    if (totalArmy > getTerritoryAttackCost() && curArmyPerUpdate > getNextTerritoryUnitCost()){
+        warTab.style.boxShadow= "0 0 10px rgba(0, 0, 255, 0.50)"
+        territoryButton.style.border = "2px solid green"
+        territoryReady = true;
+    }
+    else{
+        warTab.style.boxShadow= "0 0 10px rgba(0, 0, 0, 0.15)"
+        territoryButton.style.border = "2px solid grey"
+        territoryReady = false
+    }
+
+    if (totalArmy > (EnemyArmy(totalWarsWon)/2)){
+        warTab.style.boxShadow= "0 0 15px rgba(255, 0, 0, 0.50)"
+        attackButton.style.border = "2px solid green"
+        warReady = true
+    }
+    else{
+        if (!(territoryReady))
+            warTab.style.boxShadow= "0 0 10px rgba(0, 0, 0, 0.15)"
+        attackButton.style.border = "2px solid grey"
+        warReady = false
+    }
+
+    if (territoryReady && warReady){
+        warTab.style.boxShadow= "0 0 15px rgba(0, 255, 0, 0.99)"
+    }
+
+
+        
+
     for (let building in armyPrices){
-        opacityPercentage = Math.floor(totalMoney/getUnitPrice(building, 1, armyPrices[building])*100)
+        opacityPercentage = Math.floor(totalMoney/getUnitPrice(building, 1, armyPrices[building])*100)  
 
         if (document.getElementById(building+"input").value){
             ThisButtonVisibility(building, document.getElementById(building+"input").value)
@@ -53,10 +94,19 @@ export function ButtonAffordableVisibility(){
             opacityPercentage = Math.floor(totalMoney/getUnitPrice(building, 1, document.getElementById(building+"BUContainer").getAttribute("data-suprice"))*100)
         if (opacityPercentage < 15)
             opacityPercentage = 15;
+        if(opacityPercentage < 100 && opacityPercentage > 80)
+            opacityPercentage = 80;
         if (opacityPercentage >= 100){
             opacityPercentage = 100;
-            document.getElementById(building+"button").style.border = "2px solid green"
-            document.getElementById(building+"button").style.opacity = (opacityPercentage+"%")
+            if (building === "Embassy" && totalWarsWon === 0 || building === "Embassy" && totalWarsWon <= armyBuildings["Embassy"]){
+                document.getElementById(building+"button").style.opacity = (opacityPercentage+"%")
+                document.getElementById(building+"button").style.border = "2px solid grey"
+            }
+            else{
+                document.getElementById(building+"button").style.border = "2px solid green"
+                document.getElementById(building+"button").style.opacity = (opacityPercentage+"%")
+            }
+            
         }
         else{
             document.getElementById(building+"button").style.opacity = (opacityPercentage+"%")
@@ -71,6 +121,8 @@ export function ButtonAffordableVisibility(){
                 opacityPercentage = Math.round(totalMoney/upgradePrices[upgrade]*100)
             if (opacityPercentage < 15)
                 opacityPercentage = 15;
+            if(opacityPercentage < 100 && opacityPercentage > 80)
+                opacityPercentage = 80;
             if (opacityPercentage >= 100){
                 opacityPercentage = 100;
                 document.getElementById(upgrade+"UpgradeButton").style.border = "2px solid green"
@@ -93,7 +145,9 @@ export function ThisButtonVisibility(building, amount){
     }
 
     if (opacityPercentage < 15)
-    opacityPercentage = 15;
+        opacityPercentage = 15;
+    if(opacityPercentage < 100 && opacityPercentage > 80)
+        opacityPercentage = 80;
     if (opacityPercentage >= 100){
         opacityPercentage = 100;
         document.getElementById(building+"button").style.border = "2px solid green"

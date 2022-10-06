@@ -70,7 +70,7 @@ export function FightArmy(curTotalArmy, curTotalWarsWon){
     }
 }
 
-function EnemyArmy(warsWon){
+export function EnemyArmy(warsWon){
     let curEnemyArmySize = (warsWon**2) *  armyGrowth * (warsWon+1)
     if (warsWon == 0)
         curEnemyArmySize = startingEnemyArmy;

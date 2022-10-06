@@ -57,12 +57,24 @@ export function LoadPrestige(loadedData){
     const cycleLevelText = document.getElementById("CycleLevelText")
     const builderText = document.getElementById("PrestigeBuilder")
     
-    prestigeLevel = loadedData["pLevel"]
-    prestigePoints = loadedData["pPoints"]
-    cycleLevel = loadedData["pCycle"]
-    unitHalf = loadedData["uHalf"]
-    upgHalf = loadedData["upHalf"]
-    prestigeBuilders = loadedData["pBuilder"]
+    if (prestigeLevel === undefined || prestigeLevel === NaN || isNaN(prestigeLevel)){
+        prestigeLevel = 0
+        prestigePoints = 0
+        cycleLevel = 0
+        unitHalf = 0
+        upgHalf = 0
+        prestigeBuilders = 0
+        return
+    }
+    else{
+        prestigeLevel = loadedData["pLevel"]
+        prestigePoints = loadedData["pPoints"]
+        cycleLevel = loadedData["pCycle"]
+        unitHalf = loadedData["uHalf"]
+        upgHalf = loadedData["upHalf"]
+        prestigeBuilders = loadedData["pBuilder"]
+    }
+
 
     levelText.textContent = ("Prestige level: "+prestigeLevel)
     pointsText.textContent = ("Prestige points: "+prestigePoints)
@@ -151,6 +163,9 @@ export function BuilderBuildBuilding(){
 export function OfflineBuilders(secsOffline){
 
     if (prestigeBuilders < 1)
+        return
+
+    if (prestigeBuilders === undefined || prestigeBuilders === NaN || isNaN(prestigeBuilders))
         return
 
     let name = "Barrack"

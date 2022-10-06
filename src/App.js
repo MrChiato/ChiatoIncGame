@@ -8,11 +8,13 @@ import { ArmyInputChange } from "./WarFunctions";
 import { Stats } from "./Components/Statistics";
 import { LoadStringButton, ShowStringInField } from "./HandleStringSaveLoad";
 import { PrestigeBuilder, PrestigeCycleSpeed, PrestigeHalfUnitPrice, PrestigeLevelPress, prestigeRequirement } from "./PrestigeLeveling";
+import Building from "./Components/Building";
+import TerritoryBuilding from "./Components/TerritoryBuildings";
 
-const startUnitPrice = 10000;
-const startUpgradePrice = 100000;
+const startUnitPrice = 1000;
+const startUpgradePrice = 10000;
 const startUnitValue = 1;
-const versionNumber = "0.0.6"
+const versionNumber = "0.0.7"
 
 export const startingArmyWin = 200000;
 export const startingEnemyArmy = 20000;
@@ -20,47 +22,55 @@ const startingArmyRequirement = armyRequirement
 
 export let armyPrices = {
   "Barrack": startUnitPrice,
-  "Shooting Range": startUnitPrice*50,
-  "Naval Academy": startUnitPrice*200,
-  "Command School": startUnitPrice*500,
-  "Workshop": startUnitPrice*1250,
-  "Tank Plant": startUnitPrice*2000,
-  "Aircraft Plant": startUnitPrice*5000,
-  "Shipyard": startUnitPrice*8000,
-  "Submarine Station": startUnitPrice*12500,
-  "Missile Silo": startUnitPrice*50000,
-  "Nuclear Missile Silo": startUnitPrice*500000,
-  "Space Station": startUnitPrice*99999999
+  "Embassy": 100000,
+  "Boot Camp": startUnitPrice*500,
+  "Shooting Range": startUnitPrice*2500,
+  "Naval Academy": startUnitPrice*11000,
+  "FOB": startUnitPrice*20000,
+  "Command School": startUnitPrice*50000,
+  "Workshop": startUnitPrice*125000,
+  "Tank Plant": startUnitPrice*500000,
+  "Aircraft Plant": startUnitPrice*1250000,
+  "Shipyard": startUnitPrice*5000000,
+  "Submarine Station": startUnitPrice*10000000,
+  "Missile Silo": startUnitPrice*33000000,
+  "Nuclear Missile Silo": startUnitPrice*99000000,
+  "Space Station": startUnitPrice*5000000000
 }
 
 export let upgradePrices = {
   "Barrack": startUpgradePrice,
-  "Shooting Range": startUpgradePrice*15,
-  "Naval Academy": startUpgradePrice*75,
-  "Command School": startUpgradePrice*200,
-  "Workshop": startUpgradePrice*350,
-  "Tank Plant": startUpgradePrice*500,
-  "Aircraft Plant": startUpgradePrice*1250,
-  "Shipyard": startUpgradePrice*2000,
-  "Submarine Station": startUpgradePrice*3250,
-  "Missile Silo": startUpgradePrice*17500,
-  "Nuclear Missile Silo": startUpgradePrice*200000,
-  "Space Station": startUpgradePrice*9999999
+  "Boot Camp": startUpgradePrice*250,
+  "Shooting Range": startUpgradePrice*1400,
+  "Naval Academy": startUpgradePrice*3000,
+  "FOB": startUpgradePrice*5000,
+  "Command School": startUpgradePrice*6000,
+  "Workshop": startUpgradePrice*19000,
+  "Tank Plant": startUpgradePrice*50000,
+  "Aircraft Plant": startUpgradePrice*12000,
+  "Shipyard": startUpgradePrice*60000,
+  "Submarine Station": startUpgradePrice*100000,
+  "Missile Silo": startUpgradePrice*400000,
+  "Nuclear Missile Silo": startUpgradePrice*800000,
+  "Space Station": startUpgradePrice*999999999
 }
 
 export let startingValues = {
   "Barrack": startUnitValue,
-  "Shooting Range": startUnitValue*15,
-  "Naval Academy": startUnitValue*30,
-  "Command School": startUnitValue*50,
-  "Workshop": startUnitValue*90,
-  "Tank Plant": startUnitValue*130,
-  "Aircraft Plant": startUnitValue*250,
-  "Shipyard": startUnitValue*400,
-  "Submarine Station": startUnitValue*675,
-  "Missile Silo": startUnitValue*1500,
-  "Nuclear Missile Silo": startUnitValue*5000,
-  "Space Station": startUnitValue*99999
+  "Embassy": 1000,
+  "Boot Camp": startUnitValue*500,
+  "Shooting Range": startUnitValue*3000,
+  "Naval Academy": startUnitValue*15000,
+  "FOB": startUnitValue*50000,
+  "Command School": startUnitValue*80000,
+  "Workshop": startUnitValue*200000,
+  "Tank Plant": startUnitValue*600000,
+  "Aircraft Plant": startUnitValue*1500000,
+  "Shipyard": startUnitValue*5500000,
+  "Submarine Station": startUnitValue*12000000,
+  "Missile Silo": startUnitValue*42000000,
+  "Nuclear Missile Silo": startUnitValue*99000000,
+  "Space Station": startUnitValue*999999999
 }
 
 function App(){
@@ -93,18 +103,21 @@ function App(){
       <BuildPanelContainer>
         <h2>Army</h2>
         <DescText>Construct buildings to strengthen your army</DescText>
-        <BUContainer name="Barrack" amount={1} price={startUnitPrice} upgradePrice={startUpgradePrice} value={startUnitValue} unit="soldier"></BUContainer>
-        <BUContainer name="Shooting Range" amount={1} price={armyPrices["Shooting Range"]} upgradePrice={upgradePrices["Shooting Range"]} value={startUnitValue*15} unit="soldier"></BUContainer>
-        <BUContainer name="Naval Academy" amount={1} price={armyPrices["Naval Academy"]} upgradePrice={upgradePrices["Naval Academy"]} value={startUnitValue*30} unit="Navy SEAL"></BUContainer>
-        <BUContainer name="Command School" amount={1} price={armyPrices["Command School"]} upgradePrice={upgradePrices["Command School"]} value={startUnitValue*50} unit="Navy SEAL"></BUContainer>
-        <BUContainer name="Workshop" amount={1} price={armyPrices["Workshop"]} upgradePrice={upgradePrices["Workshop"]} value={startUnitValue*90} unit="Armored Vehicle"></BUContainer>
-        <BUContainer name="Tank Plant" amount={1} price={armyPrices["Tank Plant"]} upgradePrice={upgradePrices["Tank Plant"]} value={startUnitValue*130} unit="Tank"></BUContainer>
-        <BUContainer name="Aircraft Plant" amount={1} price={armyPrices["Aircraft Plant"]} upgradePrice={upgradePrices["Aircraft Plant"]} value={startUnitValue*250} unit="Aircraft"></BUContainer>
-        <BUContainer name="Shipyard" amount={1} price={armyPrices["Shipyard"]} upgradePrice={upgradePrices["Shipyard"]} value={startUnitValue*400} unit="Hangar Ship"></BUContainer>
-        <BUContainer name="Submarine Station" amount={1} price={armyPrices["Submarine Station"]} upgradePrice={upgradePrices["Submarine Station"]} value={startUnitValue*675} unit="Submarine"></BUContainer>
-        <BUContainer name="Missile Silo" amount={1} price={armyPrices["Missile Silo"]} upgradePrice={upgradePrices["Missile Silo"]} value={startUnitValue*1500} unit="Missiles"></BUContainer>
-        <BUContainer name="Nuclear Missile Silo" amount={1} price={armyPrices["Nuclear Missile Silo"]} upgradePrice={upgradePrices["Nuclear Missile Silo"]} value={startUnitValue*5000} unit="Nuclear Missiles"></BUContainer>
-        <BUContainer name="Space Station" amount={1} price={armyPrices["Space Station"]} upgradePrice={upgradePrices["Space Station"]} value={startUnitValue*99999} unit="Orbital Cannon"></BUContainer>
+        <TerritoryBuilding name="Embassy" amount={1} price={armyPrices["Embassy"]} value={startingValues["Embassy"]} unit="Allied force" type="Territory"></TerritoryBuilding>
+        <BUContainer name="Barrack" amount={1} price={startUnitPrice} upgradePrice={startUpgradePrice} value={startingValues["Barrack"]} unit="Recruit"></BUContainer>
+        <BUContainer name="Boot Camp" amount={1} price={armyPrices["Boot Camp"]} upgradePrice={upgradePrices["Boot Camp"]} value={startingValues["Boot Camp"]} unit="Soldier"></BUContainer>
+        <BUContainer name="Shooting Range" amount={1} price={armyPrices["Shooting Range"]} upgradePrice={upgradePrices["Shooting Range"]} value={startingValues["Shooting Range"]} unit="Sniper team"></BUContainer>
+        <BUContainer name="Naval Academy" amount={1} price={armyPrices["Naval Academy"]} upgradePrice={upgradePrices["Naval Academy"]} value={startingValues["Naval Academy"]} unit="Navy SEAL"></BUContainer>
+        <BUContainer name="FOB" amount={1} price={armyPrices["FOB"]} upgradePrice={upgradePrices["FOB"]} value={startingValues["FOB"]} unit="Squad"></BUContainer>
+        <BUContainer name="Command School" amount={1} price={armyPrices["Command School"]} upgradePrice={upgradePrices["Command School"]} value={startingValues["Command School"]} unit="Commanders"></BUContainer>
+        <BUContainer name="Workshop" amount={1} price={armyPrices["Workshop"]} upgradePrice={upgradePrices["Workshop"]} value={startingValues["Workshop"]} unit="Armored Vehicle"></BUContainer>
+        <BUContainer name="Tank Plant" amount={1} price={armyPrices["Tank Plant"]} upgradePrice={upgradePrices["Tank Plant"]} value={startingValues["Tank Plant"]} unit="Tank"></BUContainer>
+        <BUContainer name="Aircraft Plant" amount={1} price={armyPrices["Aircraft Plant"]} upgradePrice={upgradePrices["Aircraft Plant"]} value={startingValues["Aircraft Plant"]} unit="Aircraft"></BUContainer>
+        <BUContainer name="Shipyard" amount={1} price={armyPrices["Shipyard"]} upgradePrice={upgradePrices["Shipyard"]} value={startingValues["Shipyard"]} unit="Hangar Ship"></BUContainer>
+        <BUContainer name="Submarine Station" amount={1} price={armyPrices["Submarine Station"]} upgradePrice={upgradePrices["Submarine Station"]} value={startingValues["Submarine Station"]} unit="Submarine"></BUContainer>
+        <BUContainer name="Missile Silo" amount={1} price={armyPrices["Missile Silo"]} upgradePrice={upgradePrices["Missile Silo"]} value={startingValues["Missile Silo"]} unit="Missiles"></BUContainer>
+        <BUContainer name="Nuclear Missile Silo" amount={1} price={armyPrices["Nuclear Missile Silo"]} upgradePrice={upgradePrices["Nuclear Missile Silo"]} value={startingValues["Nuclear Missile Silo"]} unit="Nuclear Missiles"></BUContainer>
+        <BUContainer name="Space Station" amount={1} price={armyPrices["Space Station"]} upgradePrice={upgradePrices["Space Station"]} value={startingValues["Space Station"]} unit="Orbital Cannon"></BUContainer>
       </BuildPanelContainer>
       </TabContainer>
 
@@ -114,19 +127,19 @@ function App(){
         <StatsText id="territoryText">Territory: 1</StatsText>
         <StatsText id="losesText">Loses per cycle: 0</StatsText>
         <DescText>Use your army to take over new Territory, this will cost army strength but more territory generates more income.<br/>Owning more territory will also cause soldiers to die by protecting it, causing losses over time</DescText>
-        <StatsInfoText id="attackCostText">Attacking now will require 1,000 army forces and take 1 army to defend and generate $1,000 income</StatsInfoText>
+        <StatsInfoText id="attackCostText">Attacking now will require 100 army forces and take 0 army to defend and generate $150 income</StatsInfoText>
         <ErrorText id="territoryError"></ErrorText>
-        <Button onClick={() => territoryClick()}>Take over new Territory</Button>
+        <Button id="TerritoryButton" onClick={() => territoryClick()}>Take over new Territory</Button>
         </TerritoryPanelInnerContainer>
         <TerritoryPanelInnerContainer>
         <StatsText id="warsWonText">Wars won: 0</StatsText>
         <StatsText id="armyWonText">Cash made: $0</StatsText>
         <StatsText id="armyLostText">Army lost: 0</StatsText>
         <DescText>Use your army to attack other nations, you risk losing the army you send.</DescText>
-        <StatsInfoText id="armyCostText">Attacking now will require atleast {startingArmyRequirement.toLocaleString()} army forces and win up to ${startingArmyWin.toLocaleString()}. This enemy force has an Army strength of {startingEnemyArmy.toLocaleString()}</StatsInfoText>
+        <StatsInfoText id="armyCostText">Attacking now will require atleast {startingArmyRequirement.toLocaleString()} army forces and win ${startingArmyWin.toLocaleString()}. This enemy force has an Army strength of {startingEnemyArmy.toLocaleString()}</StatsInfoText>
         <Input id="armyToSendInput" type="number" placeholder="Army to send.." onChange={() => ArmyInputChange()}></Input>
         <DescText id="warResult"></DescText>
-        <Button onClick={() => attackClick()}>Attack nation</Button>
+        <Button id="AttackButton" onClick={() => attackClick()}>Attack nation</Button>
         </TerritoryPanelInnerContainer>
       </TerritoryPanelContainer>
       </TabContainer>
@@ -155,11 +168,12 @@ function App(){
       <TabContainer id="About" className="TabContainers">
         <span>Changelog: version: {versionNumber}</span>
           <ul>Changes:
-            <li>First iteration of a prestige system, balancing and features to come!</li>
-            <li>New save system allows to save your saves as a line of text, to share between devices, with friends or for bug reports</li>
-            <li>Winning probability added to war feature</li>
-            <li>Fixed a bug that did enemy army size wrong (too high), woops!</li>
-            <li>Few more bug fixes, thanks guys!</li>
+            <li>Balance update, try it out and let me know how the pace of the game feels!</li>
+            <li>Rewrote all territory calculations</li>
+            <li>Added a new kind of building, territory buildings. Embassy will be the test for this</li>
+            <li>Added an indicator to the attack and take over territory buttons, to show if you have enough army</li>
+            <li>Added an indicator to the tab of Warfare to show if something in there is ready to go</li>
+            <li>Cleaned up some code and fixed some bugs</li>
           </ul>
           <BuildPanelContainer>
           <DescText>Join the discord server to discuss the game, give feedback or report bugs :)</DescText>
@@ -169,6 +183,10 @@ function App(){
           <DescText>Fund development of this game by buying me a coffee, thanks a lot!</DescText>
           <a href="https://www.buymeacoffee.com/Chiato" target="_blank" title="Buy me a coffee!">
             <img src="https://ps.w.org/buymeacoffee/assets/icon-256x256.png?rev=2424125"></img>
+          </a>
+          <DescText>Discuss the game on Reddit!</DescText>
+          <a href="https://www.reddit.com/r/ChiatoIncGame/" target="_blank" title="Join the subreddit!">
+            <img src="https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png"></img>
           </a>
           </BuildPanelContainer>
       </TabContainer>

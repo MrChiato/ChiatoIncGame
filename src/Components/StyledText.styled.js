@@ -77,7 +77,7 @@ export const DetailText = styled.p`
     font-size: 20px;
     font-weight: 500;
     text-align: center;
-    width: 50%;
+    width: 80%;
     font-style: italic;
 `
 

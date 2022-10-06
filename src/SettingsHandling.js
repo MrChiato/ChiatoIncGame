@@ -66,6 +66,8 @@ export function UpdateDetailedText(){
     let detailedBuildingText, detailedUpgradeText, thisUnitValue, thisUnitPrice, thisUnitPriceEf, descBuildingText, upgEf, thisUpgradesAmount, thisUpgPrice
 
     for (let building in armyPrices){
+        if (building === "Embassy")
+            continue
         detailedBuildingText = document.getElementById(building+"detailedStats")
         descBuildingText = document.getElementById(building+"descText")
         detailedUpgradeText = document.getElementById(building+"detailedUpgStats")
@@ -100,6 +102,8 @@ export function UpdateDetailedText(){
 
 function DisableDetailedText(){
     for (let building in armyPrices){
+        if (building === "Embassy")
+            continue
         let detailedBuildingText = document.getElementById(building+"detailedStats")
         let descBuildingText = document.getElementById(building+"descText")
         let detailedUpgradeText = document.getElementById(building+"detailedUpgStats")

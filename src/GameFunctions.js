@@ -16,14 +16,14 @@ let attackCostIncrease = 1000;
 const incomeIncrease = 5;
 const startIncome = 990;
 let armyLossIncrease = 2;
-export let territoryIncome = 250;
+export let territoryIncome = 100;
 let territoryLoses = 0;
 
-export let totalMoney = 250000;
+export let totalMoney = 10000;
 export let totalArmy = 0;
 
 let armyPerUpdate = 0;
-let curArmyPerUpdate = 0;
+export let curArmyPerUpdate = 0;
 
 export let totalWarsWon = 0;
 let totalArmyWon = 0;
@@ -47,7 +47,13 @@ export let saveUpgradePrices = {
 
 }
 
+export function setMoney(money){
+    totalMoney += money
+}
 
+export function setArmy(army){
+    totalArmy += army
+}
 
 export function startGame(){
     if (gameIsStarted === false){ 
@@ -128,13 +134,28 @@ export function buttonClick(price, value, amount, name, type){
             armyBuildings[name] += amount;
         else{
             armyBuildings[name] = amount;
-            ShowNextUpgradeContainer(Object.keys(armyBuildings).length-1)
+            let buildingsOwned = Object.keys(armyBuildings).length-1
+            if ("Embassy" in armyBuildings)
+            buildingsOwned -= 1;
+            ShowNextUpgradeContainer(buildingsOwned)
         }
         armyValue[name] = value;
         armyPerUpdate = calculateIncome() - territoryLoses;
     }
     else if (type === "Territory"){
-
+        if (name in armyBuildings){
+            if (armyBuildings[name] >= totalWarsWon)
+            return
+            armyBuildings[name] += amount;
+        }
+        else{
+            if (0 >= totalWarsWon)
+                return
+            armyBuildings[name] = amount;
+        }
+        buyArmyUpgrade(calcPrice, value, amount)
+        armyValue[name] = value;
+        armyPerUpdate = calculateIncome() - territoryLoses;
     }
     else if (type === "Money"){
 
@@ -263,33 +284,117 @@ export function territoryClick(){
 }
 
 function takeOverTerritory(){
-    let attackCost = (totalTerritory**2)*attackCostIncrease;
+    let attackCost = getTerritoryAttackCost();
     let errorTextField = document.getElementById("territoryError");
     errorTextField.textContent = "";
+
+    if (totalTerritory < 9){
+        EarlyGameTerritory()
+        return;
+    }
+
     if (attackCost > totalArmy){
-        errorTextField.textContent = "You do not have enough army to take over this territory, you need atleast "+attackCost+" army strength";
+        errorTextField.textContent = "You do not have enough army to take over this territory, you need atleast "+attackCost.toLocaleString()+" army strength";
         return
     }
-    if (curArmyPerUpdate < ((attackCost/1000)**armyLossIncrease)){
-        errorTextField.textContent = "You do not have enough army income to defend this territory, construct more buildings, you need atleast "+((attackCost/1000)**armyLossIncrease)+" army per cycle.";
+
+
+    if (curArmyPerUpdate < (getNextTerritoryUnitCost())){
+        errorTextField.textContent = "You do not have enough army income to defend this territory, construct more buildings, you need atleast "+getNextTerritoryUnitCost().toLocaleString()+" army per cycle.";
         return
     }
-    
+
     totalTerritory += 1;
     totalArmy -= attackCost;
 
-    let losesCost = (attackCost/1000)**armyLossIncrease
-
-    territoryIncome += startIncome+(incomeIncrease)*(losesCost*totalTerritory);
-    territoryLoses += losesCost;
-
-    attackCost = (totalTerritory**2)*attackCostIncrease;
-    let nextLoses = (attackCost/1000)**armyLossIncrease
-    let nextIncome = startIncome+(incomeIncrease)*(nextLoses*(totalTerritory+1))
+    territoryIncome += getTerritoryIncome();
+    territoryLoses += getTerritoryUnitCost();
 
     updateText();
-    updateTerritoryText(attackCost, nextLoses, nextIncome);
+    updateTerritoryText();
+    ButtonAffordableVisibility();
 }
+
+function EarlyGameTerritory(){
+    let earlyTerritoryCost = [0, 100, 500, 1000, 3000, 10000, 20000, 30000, 50000 ]
+    let earlyTerritoryIncome = [100, 150, 300, 700, 2000, 5000, 10000, 20000, 30000 ]
+    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 1000, 2500 ]
+
+    let t = totalTerritory
+    let errorTextField = document.getElementById("territoryError");
+
+    if (earlyTerritoryCost[t] > totalArmy){
+        errorTextField.textContent = "You do not have enough army to take over this territory, you need atleast "+earlyTerritoryCost[t]+" army strength";
+        return
+    }
+    if (curArmyPerUpdate < earlyTerritoryUnit[t]){
+        errorTextField.textContent = "You do not have enough army income to defend this territory, construct more buildings, you need atleast "+earlyTerritoryUnit[t]+" army per cycle.";
+        return
+    }
+    totalTerritory += 1;
+    totalArmy -= earlyTerritoryCost[t]
+    territoryIncome += earlyTerritoryIncome[t]
+    territoryLoses += earlyTerritoryUnit[t]
+    
+    updateText();
+    updateTerritoryText();
+}
+
+export function getTerritoryAttackCost(){
+    let earlyTerritoryCost = [0, 100, 500, 1000, 3000, 10000, 20000, 30000, 50000 ]
+    if (totalTerritory < 9)
+        return earlyTerritoryCost[totalTerritory]
+
+    let attackCost = (totalTerritory**2)*attackCostIncrease;
+    return attackCost
+}
+
+function getNextTerritoryAttackCost(){
+    let earlyTerritoryCost = [0, 100, 500, 1000, 3000, 10000, 20000, 30000, 50000 ]
+    if (totalTerritory < 9)
+        return earlyTerritoryCost[totalTerritory]
+
+    let attackCost = ((totalTerritory+1)**2)*attackCostIncrease;
+    return attackCost
+}
+
+export function getTerritoryIncome(){
+    let earlyTerritoryIncome = [100, 150, 300, 700, 2000, 5000, 10000, 20000, 30000 ]
+    if (totalTerritory < 9)
+        return earlyTerritoryIncome[totalTerritory]
+
+    let thisIncome = totalTerritory**2*500
+    return thisIncome
+}
+
+function getNextTerritoryIncome(){
+    let earlyTerritoryIncome = [100, 150, 300, 700, 2000, 5000, 10000, 20000, 30000 ]
+    if (totalTerritory < 9)
+        return earlyTerritoryIncome[totalTerritory]
+
+    let nextIncome = (totalTerritory+1)**2*500
+    return nextIncome
+}
+
+export function getTerritoryUnitCost(){
+    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 1000, 2500 ]
+    if (totalTerritory < 9)
+        return earlyTerritoryUnit[totalTerritory]
+
+    let nextLoses = (totalTerritory**2)**armyLossIncrease
+    return nextLoses
+}
+
+export function getNextTerritoryUnitCost(){
+    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 1000, 2500 ]
+    if (totalTerritory < 9)
+        return earlyTerritoryUnit[totalTerritory]
+
+    let nextLoses = ((totalTerritory+1)**2)**armyLossIncrease
+    return nextLoses
+}
+
+
 
 function saveToStorage(){
     const saveTime = GetNowInSeconds();
@@ -337,10 +442,6 @@ export function LoadSavedData(loadedData){
     saveUpgradePrices = loadedData["upgPrices"]
     let loadSaveTime = loadedData["saveTime"]
 
-    let attackCost = (totalTerritory**2)*attackCostIncrease;
-    let losesCost = (attackCost/1000)**armyLossIncrease
-    let nextIncome = startIncome+(incomeIncrease)*(losesCost*(totalTerritory+1))
-
     for (let building in armyBuildings){
         updateUnitsOwned(building)
         document.getElementById(building+"button").textContent = ("Build 1 for $"+(getUnitPrice(building, 1, armyPrices[building])).toLocaleString());
@@ -360,7 +461,7 @@ export function LoadSavedData(loadedData){
     CalculateNextWar();
     LoadSettings();
     TabClick("Buildings", "BuildingsTabButton")
-    updateTerritoryText(attackCost, losesCost, nextIncome);
+    updateTerritoryText();
     LoadVisibleBUContainers(Object.keys(armyBuildings).length, Object.keys(armyUpgrades).length+1)
     
 }
@@ -375,6 +476,10 @@ export function getUnitPrice(name, amount, price){
             totalPrice += (price+(i*price)/10)
             i++;
         }
+    }
+    if (name === "Embassy"){
+        totalPrice = (price*(armyBuildings[name]+1));
+        return (totalPrice)
     }
     while(i<amount){
         totalPrice += (price+((armyBuildings[name]+i)*price)/10)
@@ -422,7 +527,10 @@ function updateText(){
     document.getElementById("soldiersPerUpdateText").textContent = ("+ "+armyPerUpdate.toLocaleString());
 }
 
-function updateTerritoryText(attackCost, losesCost, nextIncome){
+function updateTerritoryText(){
+    let attackCost = getNextTerritoryAttackCost();
+    let losesCost = getNextTerritoryUnitCost();
+    let nextIncome = getNextTerritoryIncome();
     document.getElementById("territoryText").textContent = ("Territory: "+ totalTerritory.toLocaleString());
     document.getElementById("incomeText").textContent = ("+ $"+ territoryIncome.toLocaleString());
     document.getElementById("losesText").textContent = ("Loses per cycle: "+ territoryLoses.toLocaleString());
@@ -450,13 +558,13 @@ function OfflineIncome(savedTime){
     let offlineCash = territoryIncome*(secsOffline)
     totalArmy += offlineArmy;
     totalMoney += offlineCash;
+    OfflineBuilders(secsOffline)
 
     if (secsOffline < 60)
         return
 
     document.getElementById("offlineIncomeText").textContent = ("While offline you made $"+offlineCash.toLocaleString());
     document.getElementById("offlineArmyText").textContent = ("While offline your army increased by "+offlineArmy.toLocaleString());
-    OfflineBuilders(secsOffline)
     setTimeout(RemoveOfflineText, 30000);
 }
 
