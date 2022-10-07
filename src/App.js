@@ -17,7 +17,7 @@ const startUnitValue = 1;
 const versionNumber = "0.0.8"
 
 export const startingArmyWin = 200000;
-export const startingEnemyArmy = 20000;
+export const startingEnemyArmy = 5000;
 const startingArmyRequirement = armyRequirement
 
 export let armyPrices = {
@@ -127,7 +127,7 @@ function App(){
         <StatsText id="territoryText">Territory: 1</StatsText>
         <StatsText id="losesText">Loses per cycle: 0</StatsText>
         <DescText>Use your army to take over new Territory, this will cost army strength but more territory generates more income.<br/>Owning more territory will also cause soldiers to die by protecting it, causing losses over time</DescText>
-        <StatsInfoText id="attackCostText">Attacking now will require 100 army forces and take 0 army to defend and generate $150 income</StatsInfoText>
+        <StatsInfoText id="attackCostText">Attacking now will require 50 army forces, take 0 army to defend and generate $150 income</StatsInfoText>
         <ErrorText id="territoryError"></ErrorText>
         <Button id="TerritoryButton" onClick={() => territoryClick()}>Take over new Territory</Button>
         </TerritoryPanelInnerContainer>
@@ -169,10 +169,13 @@ function App(){
         <span>Changelog: version: {versionNumber}</span>
           <ul>Changes:
             <li>Few more balance changes:</li>
+            <li>Lowered some early game costs</li>
             <li>Updated all building price calculations</li>
             <li>All income reduced</li>
             <li>Embassy bug fixes and army reduction</li>
+            <li>Fixed a bug that allowed income to go minus if spamming take over territory</li>
             <li>Cleaned up some code and fixed some bugs</li>
+            <li>Fixed a bug where resetting or prestiging wouldn't work correctly</li>
           </ul>
           <BuildPanelContainer>
           <DescText>Join the discord server to discuss the game, give feedback or report bugs :)</DescText>

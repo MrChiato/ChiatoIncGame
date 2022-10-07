@@ -1,5 +1,6 @@
 import { ChangeTabButton } from "./Components/Button.styled";
 import { LoadSavedData, setArmy, setMoney, totalArmy, totalMoney } from "./GameFunctions"
+import { setPrestige } from "./PrestigeLeveling";
 
 
 function CreateStringData(){
@@ -49,6 +50,7 @@ export function ShowStringInField(){
 function Cheat(){
     setArmy(99999999)
     setMoney(99999999999)
+    setPrestige(1)
 }
 
 export function LoadStringButton(){

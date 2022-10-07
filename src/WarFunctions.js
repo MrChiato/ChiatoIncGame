@@ -78,7 +78,10 @@ export function EnemyArmy(warsWon){
         curEnemyArmySize = startingEnemyArmy*2;
     if (warsWon == 2)
         curEnemyArmySize = startingEnemyArmy*3;
-    
+    if (warsWon == 3)
+        curEnemyArmySize = startingEnemyArmy*4;
+    if (warsWon == 4)
+        curEnemyArmySize = startingEnemyArmy*5;
 
     return curEnemyArmySize;
 }
@@ -91,6 +94,10 @@ function CalculateWin(enemyArmy, totalWarsWon){
             curWin = startingArmyWin*2
             if (totalWarsWon == 2)
                 curWin = startingArmyWin*3
+                if (totalWarsWon == 3)
+                    curWin = startingArmyWin*4
+                    if (totalWarsWon == 4)
+                        curWin = startingArmyWin*5
     return curWin;
 }
 

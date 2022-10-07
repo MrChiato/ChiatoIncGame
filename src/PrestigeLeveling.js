@@ -15,6 +15,11 @@ export function PrestigeLevelPress(){
     PrestigeReset();
 }
 
+export function setPrestige(prestigeToAdd){
+    prestigeLevel += prestigeToAdd;
+    prestigePoints += prestigeToAdd;
+}
+
 function PrestigeReset(){
     window.clearInterval(saveInterval)
     prestigeLevel += 1;

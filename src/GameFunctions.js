@@ -28,7 +28,7 @@ export let curArmyPerUpdate = 0;
 export let totalWarsWon = 0;
 let totalArmyWon = 0;
 let totalArmyLost = 0;
-export const armyRequirement = 10000;
+export const armyRequirement = 2500;
 export const winMultiplier = 2;
 export const armyGrowth = 2500;
 
@@ -80,6 +80,7 @@ export function loadGameClick(){
 
 export function deleteSaveClick(){
     if (window.localStorage.getItem("Save") != null)
+        window.clearInterval(saveInterval)
         localStorage.removeItem("Save")
         window.location.reload(true);
 }
@@ -122,6 +123,14 @@ function CalculateNextWar(){
     if (totalWarsWon == 2){
         nextWarWin = startingArmyWin*3
         nextWarEnemyForce = startingEnemyArmy*3
+    }
+    if (totalWarsWon == 3){
+        nextWarWin = startingArmyWin*4
+        nextWarEnemyForce = startingEnemyArmy*4
+    }
+    if (totalWarsWon == 4){
+        nextWarWin = startingArmyWin*5
+        nextWarEnemyForce = startingEnemyArmy*5
     }
     let nextArmyRequriment = nextWarEnemyForce/2
     document.getElementById("armyCostText").textContent = ("Attacking now will require atleast "+nextArmyRequriment.toLocaleString()+" army forces and win up to $"+nextWarWin.toLocaleString()+". This enemy force has an Army strength of "+nextWarEnemyForce.toLocaleString())
@@ -179,8 +188,6 @@ export function update(){
     addIncome();
     HandleVisibility()
     BuilderBuildBuilding()
-    if (curArmyPerUpdate < 0)
-        curArmyPerUpdate = 0;
     updateText();
 }
 
@@ -315,6 +322,7 @@ function takeOverTerritory(){
     updateText();
     updateTerritoryText();
     ButtonAffordableVisibility();
+    addIncome();
 }
 
 function EarlyGameTerritory(){
@@ -340,7 +348,7 @@ function EarlyGameTerritory(){
 }
 
 export function getTerritoryAttackCost(){
-    let earlyTerritoryCost = [0, 100, 500, 1000, 3000, 10000, 20000, 30000, 50000 ]
+    let earlyTerritoryCost = [0, 50, 100, 300, 1000, 3000, 10000, 20000, 40000 ]
     if (totalTerritory < 9)
         return earlyTerritoryCost[totalTerritory]
 
@@ -349,7 +357,7 @@ export function getTerritoryAttackCost(){
 }
 
 function getNextTerritoryAttackCost(){
-    let earlyTerritoryCost = [0, 100, 500, 1000, 3000, 10000, 20000, 30000, 50000 ]
+    let earlyTerritoryCost = [0, 50, 100, 300, 1000, 3000, 10000, 20000, 40000 ]
     if (totalTerritory < 9)
         return earlyTerritoryCost[totalTerritory]
 
@@ -376,7 +384,7 @@ function getNextTerritoryIncome(){
 }
 
 export function getTerritoryUnitCost(){
-    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 1000, 2500 ]
+    let earlyTerritoryUnit = [0, 0, 1, 5, 10, 30, 50, 200, 1000 ]
     if (totalTerritory < 9)
         return earlyTerritoryUnit[totalTerritory]
 
@@ -385,7 +393,7 @@ export function getTerritoryUnitCost(){
 }
 
 export function getNextTerritoryUnitCost(){
-    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 800, 1500 ]
+    let earlyTerritoryUnit = [0, 0, 1, 5, 10, 30, 50, 200, 1000 ]
     if (totalTerritory < 9)
         return earlyTerritoryUnit[totalTerritory]
 
