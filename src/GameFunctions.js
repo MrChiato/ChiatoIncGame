@@ -15,7 +15,7 @@ let totalTerritory = 1;
 let attackCostIncrease = 1000;
 const incomeIncrease = 5;
 const startIncome = 990;
-let armyLossIncrease = 2;
+let armyLossIncrease = 30;
 export let territoryIncome = 100;
 let territoryLoses = 0;
 
@@ -32,7 +32,7 @@ export const armyRequirement = 10000;
 export const winMultiplier = 2;
 export const armyGrowth = 2500;
 
-export let updateInterval;
+export let updateInterval, saveInterval;
 
 export let armyBuildings = {
 }
@@ -64,7 +64,7 @@ export function startGame(){
         updateInterval = setInterval(update, timeBetweenUpdates);
         loadGameClick()
         setTimeout(() => {
-            setInterval(saveToStorage, timeBetweenSaves);
+            saveInterval = setInterval(saveToStorage, timeBetweenSaves);
         }, loadtime);
         gameIsStarted = true;
     }
@@ -380,16 +380,16 @@ export function getTerritoryUnitCost(){
     if (totalTerritory < 9)
         return earlyTerritoryUnit[totalTerritory]
 
-    let nextLoses = (totalTerritory**2)**armyLossIncrease
+    let nextLoses = (totalTerritory**2)*armyLossIncrease
     return nextLoses
 }
 
 export function getNextTerritoryUnitCost(){
-    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 1000, 2500 ]
+    let earlyTerritoryUnit = [0, 0, 1, 5, 50, 100, 200, 800, 1500 ]
     if (totalTerritory < 9)
         return earlyTerritoryUnit[totalTerritory]
 
-    let nextLoses = ((totalTerritory+1)**2)**armyLossIncrease
+    let nextLoses = ((totalTerritory+1)**2)*armyLossIncrease
     return nextLoses
 }
 
@@ -427,6 +427,7 @@ export function loadFromStorage(){
 }
 
 export function LoadSavedData(loadedData){
+    window.clearInterval(saveInterval)
     totalMoney = loadedData["money"]
     totalArmy = loadedData["army"]
     armyBuildings = loadedData["building"]
@@ -462,6 +463,7 @@ export function LoadSavedData(loadedData){
     TabClick("Buildings", "BuildingsTabButton")
     updateTerritoryText();
     LoadVisibleBUContainers(Object.keys(armyBuildings).length, Object.keys(armyUpgrades).length+1)
+    saveInterval = setInterval(saveToStorage, timeBetweenSaves);
     
 }
 

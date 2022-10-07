@@ -14,7 +14,7 @@ import TerritoryBuilding from "./Components/TerritoryBuildings";
 const startUnitPrice = 1000;
 const startUpgradePrice = 10000;
 const startUnitValue = 1;
-const versionNumber = "0.0.7"
+const versionNumber = "0.0.8"
 
 export const startingArmyWin = 200000;
 export const startingEnemyArmy = 20000;
@@ -57,7 +57,7 @@ export let upgradePrices = {
 
 export let startingValues = {
   "Barrack": startUnitValue,
-  "Embassy": 1000,
+  "Embassy": 500,
   "Boot Camp": startUnitValue*20,
   "Shooting Range": startUnitValue*100,
   "Naval Academy": startUnitValue*150,
@@ -168,11 +168,10 @@ function App(){
       <TabContainer id="About" className="TabContainers">
         <span>Changelog: version: {versionNumber}</span>
           <ul>Changes:
-            <li>Balance update, try it out and let me know how the pace of the game feels!</li>
-            <li>Rewrote all territory calculations</li>
-            <li>Added a new kind of building, territory buildings. Embassy will be the test for this</li>
-            <li>Added an indicator to the attack and take over territory buttons, to show if you have enough army</li>
-            <li>Added an indicator to the tab of Warfare to show if something in there is ready to go</li>
+            <li>Few more balance changes:</li>
+            <li>Updated all building price calculations</li>
+            <li>All income reduced</li>
+            <li>Embassy bug fixes and army reduction</li>
             <li>Cleaned up some code and fixed some bugs</li>
           </ul>
           <BuildPanelContainer>
@@ -201,7 +200,7 @@ function App(){
         <BuildPanelContainer>
         <HelpHeaderText>Prestige! (Beta)</HelpHeaderText>
         <HelpText>The first version of prestige is here! More features will come soon!<br/>You can prestige to reset the game, you get (1) prestige point for every time you prestige. <br/>Prestige points grant very powerful upgrades, allowing you to progres further and faster!<br/>Later in development there will be upgrades and buildings that are unreachable without prestige levels, for now it is just in for testing!</HelpText>
-        <HelpText id="PrestigeCost">Raising your prestige level will cost ${prestigeRequirement.toLocaleString()}</HelpText>
+        <HelpText id="PrestigeCost">Raising your prestige level requires having {prestigeRequirement.toLocaleString()} wars won</HelpText>
         <Button onClick={() => PrestigeLevelPress()} >Prestige now!</Button>
         <ErrorText id="PrestigeErrorText"/>
         <HelpHeaderText id="PrestigeLevelText">Prestige level: 0</HelpHeaderText>

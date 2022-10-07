@@ -1,21 +1,22 @@
 import { armyPrices } from "./App";
 import { HideAllContainers, ShowNextUpgradeContainer } from "./BuildingVisibilityHandling";
-import { armyBuildings, armyValue, GetNowInSeconds, loadFromStorage, timeBetweenUpdates, totalMoney, update, updateInterval } from "./GameFunctions"
+import { armyBuildings, armyValue, GetNowInSeconds, loadFromStorage, saveInterval, timeBetweenUpdates, totalMoney, totalWarsWon, update, updateInterval } from "./GameFunctions"
 
 export let prestigeLevel = 0, prestigePoints = 0, cycleLevel = 0, unitHalf = 0, upgHalf = 0, prestigeBuilders = 0
-export let prestigeRequirement = 9999999999
+export let prestigeRequirement = 50
 export let cycleUpdateInterval;
 
 export function PrestigeLevelPress(){
     const errorTextField = document.getElementById("PrestigeErrorText")
-    if (prestigeRequirement > totalMoney){
-        errorTextField.textContent = ("You do not have enough money to prestige yet! You need "+(prestigeRequirement-totalMoney).toLocaleString()+"$ more")
+    if (prestigeRequirement > totalWarsWon){
+        errorTextField.textContent = ("You do not have enough wars won to prestige yet! You need to win "+(prestigeRequirement-totalWarsWon).toLocaleString()+" more")
         return
     }
     PrestigeReset();
 }
 
 function PrestigeReset(){
+    window.clearInterval(saveInterval)
     prestigeLevel += 1;
     prestigePoints += 1;
     const saveTime = GetNowInSeconds();
