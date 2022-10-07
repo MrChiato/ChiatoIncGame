@@ -127,7 +127,7 @@ function App(){
         <StatsText id="territoryText">Territory: 1</StatsText>
         <StatsText id="losesText">Loses per cycle: 0</StatsText>
         <DescText>Use your army to take over new Territory, this will cost army strength but more territory generates more income.<br/>Owning more territory will also cause soldiers to die by protecting it, causing losses over time</DescText>
-        <StatsInfoText id="attackCostText">Attacking now will require 50 army forces, take 0 army to defend and generate $150 income</StatsInfoText>
+        <StatsInfoText id="attackCostText">Attacking now will require 50 army forces, take 0 army to defend and generate $100 income</StatsInfoText>
         <ErrorText id="territoryError"></ErrorText>
         <Button id="TerritoryButton" onClick={() => territoryClick()}>Take over new Territory</Button>
         </TerritoryPanelInnerContainer>
