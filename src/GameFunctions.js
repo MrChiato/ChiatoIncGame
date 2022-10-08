@@ -308,7 +308,7 @@ function takeOverTerritory(){
     }
 
 
-    if (curArmyPerUpdate < (getNextTerritoryUnitCost())){
+    if (curArmyPerUpdate < getNextTerritoryUnitCost()){
         errorTextField.textContent = "You do not have enough army income to defend this territory, construct more buildings, you need atleast "+getNextTerritoryUnitCost().toLocaleString()+" army per cycle.";
         return
     }
@@ -356,7 +356,7 @@ export function getTerritoryAttackCost(){
     return attackCost
 }
 
-function getNextTerritoryAttackCost(){
+export function getNextTerritoryAttackCost(){
     let earlyTerritoryCost = [0, 50, 100, 300, 1000, 3000, 10000, 20000, 40000 ]
     if (totalTerritory < 9)
         return earlyTerritoryCost[totalTerritory]

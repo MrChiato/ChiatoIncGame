@@ -176,6 +176,7 @@ function App(){
             <li>Fixed a bug that allowed income to go minus if spamming take over territory</li>
             <li>Cleaned up some code and fixed some bugs</li>
             <li>Fixed a bug where resetting or prestiging wouldn't work correctly</li>
+            <li>Fixed a bug where territory button would go green too early</li>
           </ul>
           <BuildPanelContainer>
           <DescText>Join the discord server to discuss the game, give feedback or report bugs :)</DescText>

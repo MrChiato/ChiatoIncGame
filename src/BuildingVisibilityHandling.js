@@ -1,5 +1,5 @@
 import { armyPrices, upgradePrices } from "./App";
-import {  armyBuildings, armyUpgrades, curArmyPerUpdate, getNextTerritoryUnitCost, getTerritoryAttackCost, getTerritoryUnitCost, getUnitPrice, saveUpgradePrices, totalArmy, totalMoney, totalWarsWon } from "./GameFunctions";
+import {  armyBuildings, armyUpgrades, curArmyPerUpdate, getNextTerritoryAttackCost, getNextTerritoryUnitCost, getTerritoryAttackCost, getTerritoryUnitCost, getUnitPrice, saveUpgradePrices, totalArmy, totalMoney, totalWarsWon } from "./GameFunctions";
 import { EnemyArmy } from "./WarFunctions";
 
 
@@ -53,7 +53,7 @@ export function ButtonAffordableVisibility(){
     let warTab = document.getElementById("WarfareTabButton")
     let territoryReady, warReady
     
-    if (totalArmy > getTerritoryAttackCost() && curArmyPerUpdate >= getTerritoryUnitCost()){
+    if (totalArmy > getNextTerritoryAttackCost() && curArmyPerUpdate >= getNextTerritoryUnitCost()){
         warTab.style.boxShadow= "0 0 10px rgba(0, 0, 255, 0.50)"
         territoryButton.style.border = "2px solid green"
         territoryReady = true;
